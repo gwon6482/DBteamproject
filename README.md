@@ -5,6 +5,7 @@ commit massage 는 "(add/remove) + 기능이름"으로 부탁드립니다.
 # 서지원 - 21.11.12 22:14 - 커밋사항입니다. 
 - main.py 및 ui와 기능 디렉토리를 추가하였습니다.  
 - 디렉토리별 설명은 아래와 같습니다.  
+
 ./main.py 
   - 실행용 파일입니다.
   - app = QApplication(sys.argv) 으로 pyqt앱을 생성합니다.
@@ -22,6 +23,6 @@ commit massage 는 "(add/remove) + 기능이름"으로 부탁드립니다.
   - class WindowClass(QMainWindow, form_class) 으로 각 기능별 ui에 대한 기능을 정의합니다.
   - 자세한 구현은 소스파일의 login 과 register 기능 구현 소스 코드를 참조하시면 됩니다.  
 
-위키독스 Pyqt 관련도서 입니다. 참고바랍니다.
-https://wikidocs.net/21849
-https://wikidocs.net/21950
+위키독스 Pyqt 관련도서 입니다. 참고바랍니다.  
+https://wikidocs.net/21849  
+https://wikidocs.net/21950  
