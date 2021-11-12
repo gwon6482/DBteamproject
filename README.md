@@ -20,4 +20,8 @@ commit massage 는 "(add/remove) + 기능이름"으로 부탁드립니다.
   - 각 기능은 main디렉토리의 하위에 디렉토리의 형태로 저장합니다.
   - 이후 form_class = uic.loadUiType("./ui/(기능이름).ui")[0] 의 형태로 ui를 불러옵니다.
   - class WindowClass(QMainWindow, form_class) 으로 각 기능별 ui에 대한 기능을 정의합니다.
-  - 자세한 구현은 소스파일의 login 과 register 기능 구현 소스 코드를 참조하시면 됩니다.
+  - 자세한 구현은 소스파일의 login 과 register 기능 구현 소스 코드를 참조하시면 됩니다.  
+
+위키독스 Pyqt 관련도서 입니다. 참고바랍니다.
+https://wikidocs.net/21849
+https://wikidocs.net/21950
