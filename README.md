@@ -33,5 +33,5 @@ https://www.youtube.com/watch?v=yPgQ0N6gdhI
 개발 순서는
 1. QtDesigner 로 ui개발
 2. .py파일을 생성하여 ui와 연결 및 필요 메소드 구현
-3. start(기능이름)() 함수를 통하여 이전 ui와 연결
+3. start(기능이름)() 함수를 통하여 이전 ui와 연결  
 순서로 하시면 편하실거라 생각합니다.  
