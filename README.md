@@ -12,7 +12,7 @@ commit massage 는 "(add/remove) + 기능이름"으로 부탁드립니다.
   - myWindow는 ui전환을 위한 global변수 입니다. 이후 기능에서 이 변수를 참조 및 변경하여 ui를 변경합니다.
   - sys.exit(app.exec_())로 app의 실행 및 프로그램 종료를 동시에 실행합니다.
 
-./ui/
+./ui/(기능이름).ui
   - ui저장용 디렉토리입니다.
   - 모든 기능들의 ui는 이 디렉토리에 저장후 import하여 사용합니다.
 
@@ -26,3 +26,12 @@ commit massage 는 "(add/remove) + 기능이름"으로 부탁드립니다.
 위키독스 Pyqt 관련도서 입니다. 참고바랍니다.  
 https://wikidocs.net/21849  
 https://wikidocs.net/21950  
+
+youTube 관련자료 입니다.  
+https://www.youtube.com/watch?v=yPgQ0N6gdhI  
+
+개발 순서는
+1. QtDesigner 로 ui개발
+2. .py파일을 생성하여 ui와 연결 및 필요 메소드 구현
+3. start(기능이름)() 함수를 통하여 이전 ui와 연결
+순서로 하시면 편하실거라 생각합니다.  
