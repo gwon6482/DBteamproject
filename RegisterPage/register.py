@@ -4,7 +4,6 @@ import LoginPage.Login
 
 
 #UI파일 연결
-#UI파일의 위치는 절대경로로 삽입바랍니다.
 form_class = uic.loadUiType("./ui/Register.ui")[0]
 
 #화면을 띄우는데 사용되는 Class 선언

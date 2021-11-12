@@ -4,7 +4,6 @@ from PyQt5 import uic #ui파일을 불러오기위한 라이브러리
 import RegisterPage.register #register기능으로 넘어가기 위한 import
 
 #UI파일 연결
-#UI파일의 위치는 절대경로로 삽입바랍니다.
 form_class = uic.loadUiType("./ui/Login.ui")[0]
 
 #화면을 띄우는데 사용되는 Class 선언
