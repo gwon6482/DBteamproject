@@ -1,16 +1,22 @@
 import sys
 from PyQt5.QtWidgets import *
-import LoginPage.Login #login 기능 호출을 위한 import
+import temp_mainPage
+import LoginPage
+
+"""
+
+main의 내용은 고정입니다.
+
+모든 테스트가 끝난 후에 
+temp_mainPage.StartTempMain() 를 
+LoginPage.StartLogin() 으로 바꿔주면 앱이 완성됩니다. 
+
+"""
+
+app = QApplication(sys.argv)    #앱 생성
+mywindow = None                 #윈도우 생성
+temp_mainPage.StartTempMain()   #임시 메인페이지 불러오기
+sys.exit(app.exec_())           #앱 실행 및 종료
 
 
-#main app 실행
-app = QApplication(sys.argv)
-#어떤 윈도우를 표시할 지는 미정
-myWindow = None
 
-
-#login 기능의 starlogin()을 호출하여 myWindow를 login페이지로 바꿔주고 보여줌
-LoginPage.Login.starlogin()
-#이후 앱실행
-#sys.exit와 함께 실행함으로써 앱 윈도우 종료시 프로그램 자동종료
-sys.exit(app.exec_())
