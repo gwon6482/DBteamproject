@@ -7,12 +7,16 @@ class temp_main(QtWidgets.QMainWindow):
         super().__init__()
         self.setupUi(self)
 
+        self.TestButton.clicked.connect(self.testbuttonClicked) # 테스트 버튼에 연결해 보겠습니다.
         self.Loginbutton.clicked.connect(self.Loginbutton_click)
         """
                 이 부분에 테스트를 원하는 기능과 연결하신 후
                 테스트 하시면 됩니다.
         
         """
+    def testbuttonClicked(self):
+        pass
+
 
     def setupUi(self, Dialog):
 
