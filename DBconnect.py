@@ -25,6 +25,10 @@ def main_menu():
         id = int(input("id: "))
         pwd = str(input("pwd: "))
         LoginCheck(id,pwd)
+    elif menu == 6:
+        input_id = input("id: ")
+        result = RequestUserData(input_id)
+        print(type(result))
 
     else:
         sys.exit()
@@ -53,8 +57,10 @@ def SqlCall():
 
             cursor.execute(sql) #sql문 실행
             result = cursor.fetchall() #결과물 fetch
+            conn.commit()
 
-            print(result)
+            for i in result:
+                print(i)
 
 
             if result == ():
@@ -168,7 +174,7 @@ def search_user():
 #login check
 def LoginCheck(id,pwd):
 
-    sql_q = "select * from user where user_id = " + str(id) + " and pwd = '" + str(pwd) + "'; "
+    sql_q = "select * from user where user_id = '" + str(id) + "' and pwd = '" + str(pwd) + "'; "
     print("실행된 sql 쿼리: "+sql_q)
 
     try:
@@ -209,7 +215,7 @@ def IdDuplicateCheck(id):
         )
         conn.connect()
         cursor = conn.cursor(pymysql.cursors.DictCursor)
-        sql_q = "select * from user where user_id =" + str(id) + ";"
+        sql_q = "select * from user where user_id = '" + str(id) + "' ;"
         print(sql_q)
         cursor.execute(sql_q)
 
@@ -235,6 +241,62 @@ def show_popup_ok(title: str, content: str):
     msg.setText(content)
     msg.setStandardButtons(QMessageBox.Ok)
     msg.exec_()
+
+
+def RegisterUser(user_id: str,
+                 pwd: str,
+                 name: str,
+                 user_type: int,
+                 sex: int,
+                 brth: str,
+                 phone: str,
+                 register_date: str
+                 ):
+    sql_q = "insert into user values('" + user_id + "', '" + pwd + "', '" + name + "', '" +user_type+"', '"   + sex + "', '" + brth + "', '" + phone + "' , '" + register_date + "');"
+    try:
+        conn = pymysql.connect(
+            host='database2021db.cxk1zwfumcmo.ap-northeast-2.rds.amazonaws.com',
+            user='admin',
+            password='test!234',
+            db='teamprj',
+            charset='utf8'
+        )
+        conn.connect()
+        cursor = conn.cursor(pymysql.cursors.DictCursor)
+        print(sql_q)
+        cursor.execute(sql_q)
+        conn.commit()
+        view_every_user()
+
+    finally:
+        conn.close()
+
+
+def RequestUserData(input_id):
+    try:
+        conn = pymysql.connect(
+            host='database2021db.cxk1zwfumcmo.ap-northeast-2.rds.amazonaws.com',
+            user='admin',
+            password='test!234',
+            db='teamprj',
+            charset='utf8'
+        )
+        conn.connect()
+        cursor = conn.cursor(pymysql.cursors.DictCursor)
+        sql_q = "select * from user where user_id = '" + input_id +"';"
+        print(sql_q)
+        cursor.execute(sql_q)
+        result = cursor.fetchall()
+        print(result[0])
+
+        return result[0]
+
+
+    finally:
+        conn.close()
+
+
+
 
 if __name__ == "__main__":
     while(1):

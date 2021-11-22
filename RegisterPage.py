@@ -1,6 +1,5 @@
 import time
 from PyQt5 import QtCore, QtGui, QtWidgets
-from PyQt5.QtWidgets import QMessageBox
 import LoginPage
 import DBconnect
 
@@ -39,7 +38,7 @@ class Register_Page(QtWidgets.QMainWindow):
         self.Register_button.clicked.connect(self.RegiserButtonClicked)
 
 
-    #성별 변경 함수
+    #성별 변경 함수 , 남자 1 여자 0
     def Set_sex_male(self):
         self.sex = 1
         print(self.sex)
@@ -47,7 +46,7 @@ class Register_Page(QtWidgets.QMainWindow):
         self.sex = 0
         print(self.sex)
 
-    #유저타입 변경 함수
+    #유저타입 변경 함수 . 구매자 1, 판매자 0
     def Set_user_Customer(self):
         self.usertype = 1
         print(self.usertype)
@@ -85,17 +84,64 @@ class Register_Page(QtWidgets.QMainWindow):
     #추후에 DB와 연결 예정
     def RegiserButtonClicked(self):
         #임시 입력 확인
-        print("user type: ",self.usertype)
-        print("sex: ", self.sex)
-        print("user id:", self.ID_input.text())
-        print("id duplicate check: ", self.Duplicatedcheck)
-        print("pwd: ", self.PWD_input.text())
-        print("PWD same check: ", self.PWD_Check)
-        print("name: ", self.name_input.text())
-        print("birth: ", self.brth_input.text())
-        print("phone: ", self.phone_input.text())
+
         now = time.localtime()
-        print("Registertime: "+"%04d-%02d-%02d" % (now.tm_year, now.tm_mon, now.tm_mday))
+        register_date = "%04d-%02d-%02d" % (now.tm_year, now.tm_mon, now.tm_mday)
+
+        if self.Duplicatedcheck == 0:
+            DBconnect.show_popup_ok("warning","need Duplicated check")
+            return
+        else:
+            if self.PWD_Check == 0:
+                DBconnect.show_popup_ok("warning","passwords are different")
+                return
+            else:
+                if self.usertype == 2:
+                    DBconnect.show_popup_ok("warning","check user type")
+                    return
+                else:
+                    if self.sex == 2:
+                        DBconnect.show_popup_ok("warning","check Sex type")
+                        return
+                    else:
+                        if self.name_input.text() == "":
+                            DBconnect.show_popup_ok("warning","input your name")
+                            return
+                        else:
+                            if self.brth_input.text() == "":
+                                DBconnect.show_popup_ok("warning","input your BirthDay")
+                                return
+                            else:
+                                if self.phone_input.text() == "":
+                                    DBconnect.show_popup_ok("warning","input your phone number")
+                                    return
+                                else:
+                                    self.RequsetRigist()
+                                    DBconnect.show_popup_ok("ok","Regist sucsess")
+                                    self.close()
+                                    LoginPage.startLoginPage()
+
+    def RequsetRigist(self):
+        id = str(self.ID_input.text())
+        pwd = str(self.PWD_input.text())
+        name = str(self.name_input.text())
+        type = str(self.usertype)
+        sex = str(self.sex)
+        brth = str(self.brth_input.text())
+        phone = str(self.phone_input.text())
+        now = time.localtime()
+        rigist = "%04d-%02d-%02d" % (now.tm_year, now.tm_mon, now.tm_mday)
+
+        DBconnect.RegisterUser(id,pwd,name,type,sex,brth,phone,rigist)
+
+
+
+
+
+
+
+
+
 
 
 
