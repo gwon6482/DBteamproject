@@ -1,18 +1,37 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 import LoginPage
+import purchase2
 
-class temp_main(QtWidgets.QMainWindow):
+class purchase1(QtWidgets.QMainWindow):
 
     def __init__(self):
         super().__init__()
         self.setupUi(self)
 
-        self.buttonBox.clicked.connect(self.Loginbutton_click) # 테스트 버튼에 연결해 보겠습니다.
+
+        self.pushButton.clicked.connect(self.pushButton_click)
+
+        self.pushButton_3.clicked.connect(self.Loginbutton_click)  # 테스트 버튼에 연결해 보겠습니다.
+
         """
                 이 부분에 테스트를 원하는 기능과 연결하신 후
                 테스트 하시면 됩니다.
-        
+
         """
+    def pushButton_3_click(self):
+        self.addItemText = self.line_addItem.text()
+        self.listWidget_Test.addItem(self.addItemText)
+
+    def pushButton_click(self):
+        purchase2.purchase2Main()
+        self.close()
+
+    def Loginbutton_click(self):
+        LoginPage.startLoginPage()
+        self.close()
+
+
+
     def testbuttonClicked(self):
         pass
 
@@ -37,10 +56,11 @@ class temp_main(QtWidgets.QMainWindow):
         self.listWidget_2.setObjectName("listWidget_2")
         self.tabWidget.addTab(self.tab_2, "")
         self.label = QtWidgets.QLabel(self.centralwidget)
-        self.label.setGeometry(QtCore.QRect(20, 10, 131, 51))
+        self.label.setGeometry(QtCore.QRect(0, 30, 71, 21))
         self.label.setObjectName("label")
         self.pushButton = QtWidgets.QPushButton(self.centralwidget)
         self.pushButton.setGeometry(QtCore.QRect(280, 20, 131, 31))
+        self.pushButton.setMouseTracking(True)
         self.pushButton.setObjectName("pushButton")
         self.pushButton_2 = QtWidgets.QPushButton(self.centralwidget)
         self.pushButton_2.setGeometry(QtCore.QRect(320, 80, 75, 23))
@@ -49,11 +69,25 @@ class temp_main(QtWidgets.QMainWindow):
         self.pushButton_3.setGeometry(QtCore.QRect(760, 0, 75, 23))
         self.pushButton_3.setObjectName("pushButton_3")
         self.lineEdit = QtWidgets.QLineEdit(self.centralwidget)
-        self.lineEdit.setGeometry(QtCore.QRect(160, 20, 113, 20))
+        self.lineEdit.setGeometry(QtCore.QRect(160, 30, 113, 20))
         self.lineEdit.setObjectName("lineEdit")
         self.lineEdit_2 = QtWidgets.QLineEdit(self.centralwidget)
         self.lineEdit_2.setGeometry(QtCore.QRect(190, 80, 113, 20))
         self.lineEdit_2.setObjectName("lineEdit_2")
+        self.label_2 = QtWidgets.QLabel(self.centralwidget)
+        self.label_2.setGeometry(QtCore.QRect(460, 30, 61, 21))
+        self.label_2.setObjectName("label_2")
+        self.tableWidget = QtWidgets.QTableWidget(self.centralwidget)
+        self.tableWidget.setGeometry(QtCore.QRect(450, 110, 361, 361))
+        self.tableWidget.setObjectName("tableWidget")
+        self.tableWidget.setColumnCount(0)
+        self.tableWidget.setRowCount(0)
+        self.pushButton_4 = QtWidgets.QPushButton(self.centralwidget)
+        self.pushButton_4.setGeometry(QtCore.QRect(720, 80, 75, 23))
+        self.pushButton_4.setObjectName("pushButton_4")
+        self.spinBox = QtWidgets.QSpinBox(self.centralwidget)
+        self.spinBox.setGeometry(QtCore.QRect(670, 80, 42, 22))
+        self.spinBox.setObjectName("spinBox")
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QtWidgets.QMenuBar(MainWindow)
         self.menubar.setGeometry(QtCore.QRect(0, 0, 832, 21))
@@ -76,16 +110,13 @@ class temp_main(QtWidgets.QMainWindow):
         self.pushButton.setText(_translate("MainWindow", "판매자 물품 보기"))
         self.pushButton_2.setText(_translate("MainWindow", "북마크 추가"))
         self.pushButton_3.setText(_translate("MainWindow", "이전으로"))
+        self.label_2.setText(_translate("MainWindow", "구매내역"))
+        self.pushButton_4.setText(_translate("MainWindow", "평점추가"))
 
 
-    def Loginbutton_click(self):
-        if self.checkBox.isChecked() :
-            LoginPage.startLoginPage()
-            self.close()
 
-
-def StartTempMain():
+def purchase1Main():
     global mywindow
-    mywindow = temp_main()
+    mywindow = purchase1()
     mywindow.show()
 
