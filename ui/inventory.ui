@@ -54,7 +54,7 @@
     <property name="geometry">
      <rect>
       <x>620</x>
-      <y>410</y>
+      <y>430</y>
       <width>101</width>
       <height>41</height>
      </rect>
@@ -66,8 +66,8 @@
    <widget class="QLineEdit" name="input_quantity">
     <property name="geometry">
      <rect>
-      <x>430</x>
-      <y>440</y>
+      <x>150</x>
+      <y>450</y>
       <width>113</width>
       <height>20</height>
      </rect>
@@ -79,8 +79,8 @@
    <widget class="QLineEdit" name="input_price">
     <property name="geometry">
      <rect>
-      <x>430</x>
-      <y>500</y>
+      <x>290</x>
+      <y>450</y>
       <width>113</width>
       <height>20</height>
      </rect>
@@ -92,7 +92,7 @@
    <widget class="QListWidget" name="listWidget">
     <property name="geometry">
      <rect>
-      <x>305</x>
+      <x>30</x>
       <y>410</y>
       <width>111</width>
       <height>131</height>
@@ -102,27 +102,27 @@
    <widget class="QLabel" name="label_2">
     <property name="geometry">
      <rect>
-      <x>430</x>
+      <x>150</x>
       <y>410</y>
       <width>81</width>
       <height>31</height>
      </rect>
     </property>
     <property name="text">
-     <string>quantity</string>
+     <string>수량</string>
     </property>
    </widget>
    <widget class="QLabel" name="label_3">
     <property name="geometry">
      <rect>
-      <x>430</x>
-      <y>470</y>
+      <x>300</x>
+      <y>410</y>
       <width>81</width>
       <height>31</height>
      </rect>
     </property>
     <property name="text">
-     <string>price</string>
+     <string>가격</string>
     </property>
    </widget>
   </widget>
