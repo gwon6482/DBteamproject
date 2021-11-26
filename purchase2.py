@@ -1,40 +1,85 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
+from PyQt5.QtGui import QIntValidator
+from PyQt5.QtWidgets import *
 import LoginPage
 import purchase1
+import DBconnect
+import datetime
+
 
 class purchase2(QtWidgets.QMainWindow):
 
     def __init__(self):
         super().__init__()
         self.setupUi(self)
+        self.pushButton.clicked.connect(self.purchase) #구매하지
+        self.pushButton_2.clicked.connect(self.pushButton_2_click)#이전으로
+        self.lineEdit.setValidator(QIntValidator(0, 100, self))
+        self.lineEdit.setValidator(QIntValidator(0, 100, self))
+        self.loadInventory()
 
-        self.pushButton_2.clicked.connect(self.pushButton_2_click)
 
 
-         # 테스트 버튼에 연결해 보겠습니다.
-
-        """
-                이 부분에 테스트를 원하는 기능과 연결하신 후
-                테스트 하시면 됩니다.
-
-        """
+    #판매자 목록 창으로 복귀
     def pushButton_2_click(self):
         purchase1.purchase1Main()
         self.close()
 
 
-    def pushButton_click(self):
-        purchase2.purchase2Main()
-        self.close()
 
-    def Loginbutton_click(self):
-        LoginPage.startLoginPage()
-        self.close()
+    #판매자 재고목록 확인
+    def loadInventory(self):
+        self.tableWidget.reset();
+        inven_list = DBconnect.SqlCommandResult("select * from product_register where user_id = 'test_id'")
+        self.tableWidget.setHorizontalHeaderLabels(inven_list[0].keys())
+        self.tableWidget.setColumnCount(len(inven_list[0]))
+        self.tableWidget.setRowCount(len(inven_list))
+        tmp = 0;
+        if inven_list != -1:
+            for row, item in enumerate(inven_list):
+                for col, key in enumerate(item.keys()):
+                    self.tableWidget.setItem(row, col, QTableWidgetItem("{}".format(item[key])))
+
+                tmp += 1
+        else:
+            print("")
+
+    #구매 기록
+    def purchase(self):
+        now = datetime.datetime.now().strftime("%Y-%m-%d")
+        print(now)
+
+        itemtype = {'ramen':1,'drink':2,'snack':3,'bottlewater':4,
+                    'television':11,'refrigerator':12,'airconditioner':13,'washingmachine':14,
+                    'pencil':21,'pen':23,'sharp':23,'note':24,
+                    'shose':31,'pants':32,'underwear':33,'shirts':34}
+        sql = "insert into product_purchase (user_id,product_id,date,quantity,price) values('{}',{},'{}',{},{})".format("test_id",
+                                                                                                                    itemtype[self.tableWidget.currentRow()[2]],
+                                                                                                                    now,
+                                                                                                                    self.input_quantity.text(),
+                                                                                                                    self.tableWidget.currentRow()[5])
+
+        result = DBconnect.SqlCommand(sql)
+
+        id=self.tableWidget.currentRow()[0]
+        quan=self.input_quantity.text()
+        self.removeInven(id,quan)
+        self.loadInventory()
+
+    #구매시 재고목록 차감
+    def removeInven(id,quan):
+        DBconnect.SqlCommandResult("update product_register set quantity=quantity-quan where register_log_id=id")
 
 
 
-    def testbuttonClicked(self):
-        pass
+
+
+
+
+
+
+
+
 
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
@@ -42,7 +87,7 @@ class purchase2(QtWidgets.QMainWindow):
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
         self.tableWidget = QtWidgets.QTableWidget(self.centralwidget)
-        self.tableWidget.setGeometry(QtCore.QRect(0, 80, 381, 321))
+        self.tableWidget.setGeometry(QtCore.QRect(0, 80, 681, 321))
         self.tableWidget.setObjectName("tableWidget")
         self.tableWidget.setColumnCount(0)
         self.tableWidget.setRowCount(0)

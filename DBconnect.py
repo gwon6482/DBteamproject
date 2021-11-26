@@ -86,16 +86,35 @@ def SqlCommand(sql):
     conn.connect()
     cursor = conn.cursor(pymysql.cursors.DictCursor)
 
+    result = -1
     try:
         cursor.execute(sql)
         conn.commit() #DB 변경내용 저장
+        result = cursor.fetchall()
 
     finally:
         conn.close()  #DB 연결종료
 
+def SqlCommandResult(sql):
+    conn = pymysql.connect(
+        host='database2021db.cxk1zwfumcmo.ap-northeast-2.rds.amazonaws.com',
+        user='admin',
+        password='test!234',
+        db='teamprj',
+        charset='utf8'
+    )
+    conn.connect()
+    cursor = conn.cursor(pymysql.cursors.DictCursor)
 
+    result = -1
+    try:
+        cursor.execute(sql)
+        conn.commit() #DB 변경내용 저장
+        result = cursor.fetchall()
 
-
+    finally:
+        conn.close()  #DB 연결종료
+        return result; #성공시 결과값 반환, 실패시 -1 반환
 
 def view_every_user():
     print("start")
@@ -109,7 +128,7 @@ def view_every_user():
     )
     conn.connect()
     cursor = conn.cursor(pymysql.cursors.DictCursor)
-    sql_q = "select * from user"
+    sql_q = "select * from product_register"
     cursor.execute(sql_q)
 
     result = cursor.fetchall()  # 결과물 fetch

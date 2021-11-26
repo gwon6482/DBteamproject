@@ -1,6 +1,11 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
+from PyQt5.QtGui import QIntValidator
+from PyQt5.QtWidgets import *
 import LoginPage
 import purchase2
+import datetime
+import DBconnect
+import pymysql
 
 class purchase1(QtWidgets.QMainWindow):
 
@@ -9,22 +14,84 @@ class purchase1(QtWidgets.QMainWindow):
         self.setupUi(self)
 
 
-        self.pushButton.clicked.connect(self.pushButton_click)
+        self.pushButton.clicked.connect(self.pushButton_click) #판매자 물품보기
+        self.pushButton_2.clicked.connect(self.add_bookmark) #북마크 추가
+        self.pushButton_3.clicked.connect(self.Loginbutton_click) #이전으로
+        self.pushButton_4.clicked.connect(self.rating) #평점추가
+        self.lineEdit.setValidator(QIntValidator(0,100,self))
+        self.lineEdit.setValidator(QIntValidator(0, 100, self))
 
-        self.pushButton_3.clicked.connect(self.Loginbutton_click)  # 테스트 버튼에 연결해 보겠습니다.
 
+
+        loadseller = DBconnect.SqlCommandResult("Select name from user where user_type=1")
+        loadbookmark = DBconnect.SqlCommandResult("Select seller_id from bookmark where user_id = 'test_id'")
+        self.loadInventory()
+
+        if loadseller != -1:
+            for i, item in enumerate(loadseller):
+                for key in item.keys():
+                    self.listWidget.addItem(item[key])
+        else:
+            self.listWidget.addItem("no items")
+        self.listWidget.setCurrentRow(0)
+
+        if loadbookmark != -1:
+            for i, item in enumerate(loadbookmark):
+                for key in item.keys():
+                    self.listWidget_2.addItem(item[key])
+        else:
+            self.listWidget_2.addItem("no items")
+        self.listWidget_2.setCurrentRow(0)
+
+
+
+
+
+    def loadInventory(self):
+        self.tableWidget.reset();
+        inven_list = DBconnect.SqlCommandResult("select * from product_register where user_id = 'test_id'")
+        self.tableWidget.setHorizontalHeaderLabels(inven_list[0].keys())
+        self.tableWidget.setColumnCount(len(inven_list[0]))
+        self.tableWidget.setRowCount(len(inven_list))
+        tmp = 0;
+        if inven_list != -1:
+            for row, item in enumerate(inven_list):
+                for col, key in enumerate(item.keys()):
+                    self.tableWidget.setItem(row, col, QTableWidgetItem("{}".format(item[key])))
+                tmp += 1
+        else:
+            print("")
+
+
+    #북마크 추가
+
+    def add_bookmark(self):
+        sql = "insert into bookmark (user_id,seller_id) value('{}','{}')".format("test_id","customer")
+        result = DBconnect.SqlCommand(sql)
         """
-                이 부분에 테스트를 원하는 기능과 연결하신 후
-                테스트 하시면 됩니다.
-
+        sql = "insert into bookmark (user_id,seller_id) value('{}','{}')".format("test_id",DBconnect.SqlCommandResult("select user_id from user where name = self.listWidget.currentItem().text()"))
+        result = DBconnect.SqlCommand(sql)
         """
-    def pushButton_3_click(self):
-        self.addItemText = self.line_addItem.text()
-        self.listWidget_Test.addItem(self.addItemText)
+
+    #평점 추가
+    def rating(self):
+        sql = "insert into rating (product_id,user_id,score) value('{}','{}',{})".format(self.tableWidget.currentItem(),
+                                                                                         "test_id",
+                                                                                         self.spinBox.value())
+        result = DBconnect.SqlCommand(sql)
+
+
+
+
+
+
+    #판매자 물품 보기
 
     def pushButton_click(self):
         purchase2.purchase2Main()
         self.close()
+
+    #이전으로
 
     def Loginbutton_click(self):
         LoginPage.startLoginPage()
@@ -32,8 +99,12 @@ class purchase1(QtWidgets.QMainWindow):
 
 
 
-    def testbuttonClicked(self):
-        pass
+
+
+
+
+
+
 
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
