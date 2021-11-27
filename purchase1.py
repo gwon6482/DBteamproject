@@ -18,13 +18,14 @@ class purchase1(QtWidgets.QMainWindow):
         self.pushButton_2.clicked.connect(self.add_bookmark) #북마크 추가
         self.pushButton_3.clicked.connect(self.Loginbutton_click) #이전으로
         self.pushButton_4.clicked.connect(self.rating) #평점추가
+        self.pushButton_5.clicked.connect(self.remove_bookmark)#북마크 삭제
         self.lineEdit.setValidator(QIntValidator(0,100,self))
         self.lineEdit.setValidator(QIntValidator(0, 100, self))
 
 
 
         loadseller = DBconnect.SqlCommandResult("Select name from user where user_type=1")
-        loadbookmark = DBconnect.SqlCommandResult("Select seller_id from bookmark where user_id = 'test_id'")
+        loadbookmark = DBconnect.SqlCommandResult("select seller_id from bookmark where user_id='test_id'")
         self.loadInventory()
 
         if loadseller != -1:
@@ -49,7 +50,7 @@ class purchase1(QtWidgets.QMainWindow):
 
     def loadInventory(self):
         self.tableWidget.reset();
-        inven_list = DBconnect.SqlCommandResult("select * from product_register where user_id = 'test_id'")
+        inven_list = DBconnect.SqlCommandResult("select product_id,date,quantity,price from product_purchase where user_id = 'test_id'")
         self.tableWidget.setHorizontalHeaderLabels(inven_list[0].keys())
         self.tableWidget.setColumnCount(len(inven_list[0]))
         self.tableWidget.setRowCount(len(inven_list))
@@ -70,16 +71,18 @@ class purchase1(QtWidgets.QMainWindow):
         #self.listWidget.currentItem().text()
         #이름을 통해 id를 찾는 쿼리
         sql1 = "select user_id from user where name = '{}';".format(self.listWidget.currentItem().text())
-        print(sql1)
+        #print(sql1)
         result = DBconnect.SqlCommandResult(sql1)
 
         name = result[0]['user_id']
 
         #정상적인 쿼리
         sql = "insert into bookmark (user_id, seller_id) values('{}','{}');".format("test_id", name)
-        print(sql)
+        #print(sql)
 
         result = DBconnect.SqlCommand(sql)
+        purchase1Main()
+        self.close()
         #추후 북마크 리스트를 보여주는 코드 추가해주세요.
 
         """
@@ -87,9 +90,32 @@ class purchase1(QtWidgets.QMainWindow):
         result = DBconnect.SqlCommand(sql)
         """
 
+    def remove_bookmark(self):
+
+        #sql1 = "select user_id from user where name = '{}';".format(self.listWidget_2.currentItem().text())
+
+        #result = DBconnect.SqlCommandResult(sql1)
+        #print(sql1)
+        #userid=result[0]
+        #print(userid)
+
+        seller = self.listWidget_2.currentItem().text()
+        print(seller)
+        sql = "delete from bookmark where user_id = 'test_id' AND seller_id = '{}';".format(seller)
+        print(sql)
+        result = DBconnect.SqlCommand(sql)
+        purchase1Main()
+        self.close()
+
+
+
+
     #평점 추가
     def rating(self):
-        sql = "insert into rating (product_id,user_id,score) value('{}','{}',{})".format(self.tableWidget.currentItem(),
+        #register_log=self.tableWidget.selectedItems()[0].text()
+        #print(register_log)
+        print(self.spinBox.value())
+        sql = "insert into rating (product_id,user_id,score) value('{}','{}',{});".format(self.tableWidget.selectedItems()[0].text(),
                                                                                          "test_id",
                                                                                          self.spinBox.value())
         result = DBconnect.SqlCommand(sql)
@@ -110,15 +136,6 @@ class purchase1(QtWidgets.QMainWindow):
     def Loginbutton_click(self):
         LoginPage.startLoginPage()
         self.close()
-
-
-
-
-
-
-
-
-
 
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
@@ -148,7 +165,7 @@ class purchase1(QtWidgets.QMainWindow):
         self.pushButton.setMouseTracking(True)
         self.pushButton.setObjectName("pushButton")
         self.pushButton_2 = QtWidgets.QPushButton(self.centralwidget)
-        self.pushButton_2.setGeometry(QtCore.QRect(320, 80, 75, 23))
+        self.pushButton_2.setGeometry(QtCore.QRect(240, 70, 75, 23))
         self.pushButton_2.setObjectName("pushButton_2")
         self.pushButton_3 = QtWidgets.QPushButton(self.centralwidget)
         self.pushButton_3.setGeometry(QtCore.QRect(760, 0, 75, 23))
@@ -156,14 +173,12 @@ class purchase1(QtWidgets.QMainWindow):
         self.lineEdit = QtWidgets.QLineEdit(self.centralwidget)
         self.lineEdit.setGeometry(QtCore.QRect(160, 30, 113, 20))
         self.lineEdit.setObjectName("lineEdit")
-        self.lineEdit_2 = QtWidgets.QLineEdit(self.centralwidget)
-        self.lineEdit_2.setGeometry(QtCore.QRect(190, 80, 113, 20))
-        self.lineEdit_2.setObjectName("lineEdit_2")
         self.label_2 = QtWidgets.QLabel(self.centralwidget)
         self.label_2.setGeometry(QtCore.QRect(460, 30, 61, 21))
         self.label_2.setObjectName("label_2")
         self.tableWidget = QtWidgets.QTableWidget(self.centralwidget)
         self.tableWidget.setGeometry(QtCore.QRect(450, 110, 361, 361))
+        self.tableWidget.setSelectionBehavior(QtWidgets.QAbstractItemView.SelectRows)
         self.tableWidget.setObjectName("tableWidget")
         self.tableWidget.setColumnCount(0)
         self.tableWidget.setRowCount(0)
@@ -173,6 +188,9 @@ class purchase1(QtWidgets.QMainWindow):
         self.spinBox = QtWidgets.QSpinBox(self.centralwidget)
         self.spinBox.setGeometry(QtCore.QRect(670, 80, 42, 22))
         self.spinBox.setObjectName("spinBox")
+        self.pushButton_5 = QtWidgets.QPushButton(self.centralwidget)
+        self.pushButton_5.setGeometry(QtCore.QRect(330, 70, 75, 23))
+        self.pushButton_5.setObjectName("pushButton_5")
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QtWidgets.QMenuBar(MainWindow)
         self.menubar.setGeometry(QtCore.QRect(0, 0, 832, 21))
@@ -197,6 +215,7 @@ class purchase1(QtWidgets.QMainWindow):
         self.pushButton_3.setText(_translate("MainWindow", "이전으로"))
         self.label_2.setText(_translate("MainWindow", "구매내역"))
         self.pushButton_4.setText(_translate("MainWindow", "평점추가"))
+        self.pushButton_5.setText(_translate("MainWindow", "북마크 삭제"))
 
 
 

@@ -14,8 +14,6 @@ class purchase2(QtWidgets.QMainWindow):
         self.setupUi(self)
         self.pushButton.clicked.connect(self.purchase) #구매하지
         self.pushButton_2.clicked.connect(self.pushButton_2_click)#이전으로
-        self.lineEdit.setValidator(QIntValidator(0, 100, self))
-        self.lineEdit.setValidator(QIntValidator(0, 100, self))
         self.loadInventory()
 
 
@@ -46,25 +44,33 @@ class purchase2(QtWidgets.QMainWindow):
 
     #구매 기록
     def purchase(self):
+
+
+
+
+        register_log_id=self.tableWidget.selectedItems()[0].text()
+        print(register_log_id)
+        seller_id=self.tableWidget.selectedItems()[1].text()
+        print(seller_id)
         now = datetime.datetime.now().strftime("%Y-%m-%d")
         print(now)
+        quantity = self.spinBox.value()
+        print(quantity)
+        price = self.tableWidget.selectedItems()[5].text()
+        print(price)
 
-        itemtype = {'ramen':1,'drink':2,'snack':3,'bottlewater':4,
-                    'television':11,'refrigerator':12,'airconditioner':13,'washingmachine':14,
-                    'pencil':21,'pen':23,'sharp':23,'note':24,
-                    'shose':31,'pants':32,'underwear':33,'shirts':34}
-        sql = "insert into product_purchase (user_id,product_id,date,quantity,price) values('{}',{},'{}',{},{})".format("test_id",
-                                                                                                                    itemtype[self.tableWidget.currentRow()[2]],
-                                                                                                                    now,
-                                                                                                                    self.input_quantity.text(),
-                                                                                                                    self.tableWidget.currentRow()[5])
 
+        item = self.tableWidget.selectedItems()[2].text()
+
+        sql = "insert into product_purchase (user_id,product_id,date,quantity,price) values('{}',{},'{}',{},{});".format("test_id",item,now,quantity,price)
+        print(sql)
         result = DBconnect.SqlCommand(sql)
+        #removeInven(register_log_id,quantity)
 
-        id=self.tableWidget.currentRow()[0]
-        quan=self.input_quantity.text()
-        self.removeInven(id,quan)
         self.loadInventory()
+
+
+
 
     #구매시 재고목록 차감
     def removeInven(id,quan):
@@ -83,11 +89,12 @@ class purchase2(QtWidgets.QMainWindow):
 
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
-        MainWindow.resize(800, 600)
+        MainWindow.resize(801, 600)
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
         self.tableWidget = QtWidgets.QTableWidget(self.centralwidget)
-        self.tableWidget.setGeometry(QtCore.QRect(0, 80, 681, 321))
+        self.tableWidget.setGeometry(QtCore.QRect(0, 80, 791, 321))
+        self.tableWidget.setSelectionBehavior(QtWidgets.QAbstractItemView.SelectRows)
         self.tableWidget.setObjectName("tableWidget")
         self.tableWidget.setColumnCount(0)
         self.tableWidget.setRowCount(0)
@@ -97,24 +104,18 @@ class purchase2(QtWidgets.QMainWindow):
         self.pushButton = QtWidgets.QPushButton(self.centralwidget)
         self.pushButton.setGeometry(QtCore.QRect(290, 470, 75, 23))
         self.pushButton.setObjectName("pushButton")
-        self.lineEdit = QtWidgets.QLineEdit(self.centralwidget)
-        self.lineEdit.setGeometry(QtCore.QRect(50, 470, 113, 20))
-        self.lineEdit.setObjectName("lineEdit")
-        self.lineEdit_2 = QtWidgets.QLineEdit(self.centralwidget)
-        self.lineEdit_2.setGeometry(QtCore.QRect(170, 470, 113, 20))
-        self.lineEdit_2.setObjectName("lineEdit_2")
-        self.label_2 = QtWidgets.QLabel(self.centralwidget)
-        self.label_2.setGeometry(QtCore.QRect(50, 440, 101, 31))
-        self.label_2.setObjectName("label_2")
         self.label_3 = QtWidgets.QLabel(self.centralwidget)
-        self.label_3.setGeometry(QtCore.QRect(170, 440, 101, 31))
+        self.label_3.setGeometry(QtCore.QRect(190, 470, 31, 21))
         self.label_3.setObjectName("label_3")
         self.pushButton_2 = QtWidgets.QPushButton(self.centralwidget)
         self.pushButton_2.setGeometry(QtCore.QRect(720, 0, 75, 23))
         self.pushButton_2.setObjectName("pushButton_2")
+        self.spinBox = QtWidgets.QSpinBox(self.centralwidget)
+        self.spinBox.setGeometry(QtCore.QRect(230, 470, 42, 22))
+        self.spinBox.setObjectName("spinBox")
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QtWidgets.QMenuBar(MainWindow)
-        self.menubar.setGeometry(QtCore.QRect(0, 0, 800, 21))
+        self.menubar.setGeometry(QtCore.QRect(0, 0, 801, 21))
         self.menubar.setObjectName("menubar")
         MainWindow.setMenuBar(self.menubar)
         self.statusbar = QtWidgets.QStatusBar(MainWindow)
@@ -129,7 +130,6 @@ class purchase2(QtWidgets.QMainWindow):
         MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
         self.label.setText(_translate("MainWindow", "상품 목록"))
         self.pushButton.setText(_translate("MainWindow", "구매하기"))
-        self.label_2.setText(_translate("MainWindow", "품목"))
         self.label_3.setText(_translate("MainWindow", "수량"))
         self.pushButton_2.setText(_translate("MainWindow", "이전으로"))
 
