@@ -66,8 +66,22 @@ class purchase1(QtWidgets.QMainWindow):
     #북마크 추가
 
     def add_bookmark(self):
-        sql = "insert into bookmark (user_id,seller_id) value('{}','{}')".format("test_id","customer")
+        #현재 선택된 리스트의 내용 출력
+        #self.listWidget.currentItem().text()
+        #이름을 통해 id를 찾는 쿼리
+        sql1 = "select user_id from user where name = '{}';".format(self.listWidget.currentItem().text())
+        print(sql1)
+        result = DBconnect.SqlCommandResult(sql1)
+
+        name = result[0]['user_id']
+
+        #정상적인 쿼리
+        sql = "insert into bookmark (user_id, seller_id) values('{}','{}');".format("test_id", name)
+        print(sql)
+
         result = DBconnect.SqlCommand(sql)
+        #추후 북마크 리스트를 보여주는 코드 추가해주세요.
+
         """
         sql = "insert into bookmark (user_id,seller_id) value('{}','{}')".format("test_id",DBconnect.SqlCommandResult("select user_id from user where name = self.listWidget.currentItem().text()"))
         result = DBconnect.SqlCommand(sql)
