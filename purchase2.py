@@ -48,24 +48,27 @@ class purchase2(QtWidgets.QMainWindow):
 
 
 
-        register_log_id=self.tableWidget.selectedItems()[0].text()
-        print(register_log_id)
+        register_log_id_a=self.tableWidget.selectedItems()[0].text()
+        print(register_log_id_a)
         seller_id=self.tableWidget.selectedItems()[1].text()
         print(seller_id)
         now = datetime.datetime.now().strftime("%Y-%m-%d")
         print(now)
-        quantity = self.spinBox.value()
-        print(quantity)
+        quantity_a = self.spinBox.value()
+        print(quantity_a)
         price = self.tableWidget.selectedItems()[5].text()
         print(price)
 
 
         item = self.tableWidget.selectedItems()[2].text()
 
-        sql = "insert into product_purchase (user_id,product_id,date,quantity,price) values('{}',{},'{}',{},{});".format("test_id",item,now,quantity,price)
+        sql = "insert into product_purchase (user_id,product_id,refund,date,quantity,price) values('{}',{},{},'{}',{},{});".format("test_id",item,0,now,quantity_a,price)
         print(sql)
         result = DBconnect.SqlCommand(sql)
-        #removeInven(register_log_id,quantity)
+        print(sql)
+        sql2 = "update product_register set quantity=quantity-{} where register_log_id='{}';".format(quantity_a, register_log_id_a)
+        print(sql2)
+        result = DBconnect.SqlCommand(sql2)
 
         self.loadInventory()
 
@@ -74,7 +77,9 @@ class purchase2(QtWidgets.QMainWindow):
 
     #구매시 재고목록 차감
     def removeInven(id,quan):
-        DBconnect.SqlCommandResult("update product_register set quantity=quantity-quan where register_log_id=id")
+        sql2 = "update product_register set quantity=quantity-quan where register_log_id=id;"
+        print(sql2)
+        result = DBconnect.SqlCommand(sql2)
 
 
 
