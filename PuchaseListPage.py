@@ -6,22 +6,31 @@ import DBconnect
 import InventoryPage
 from functools import partial
 import traceback
+import UserProfile_seller
 
 class PuchaseListWin(QtWidgets.QMainWindow):
-    def __init__(self):
+    def __init__(self, id_input):
         super().__init__()
         self.setupUi(self)
         self.tableWidget.horizontalHeader().setResizeContentsPrecision(QHeaderView.ResizeToContents)
         self.tableWidget.horizontalHeader().setStretchLastSection((True))
 
+        #id 추가
+        self.user_id = id_input
+        self.user_name = None
+        self.user_sex = None
+        self.user_type = None
+        self.user_brth = None
+        self.user_regist = None
+
         #btn events
         self.btn_addinven_2.clicked.connect(self.btnToInven)
+        self.btn_addinven_3.clicked.connect(self.btnToProfile)
 
         #추후 함수화시킬 예정
         index_product = DBconnect.SqlCommandResult("Select name from product")
         self.loadPuchaseList()
         #print(type(index_product.values()))
-
 
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
@@ -44,6 +53,9 @@ class PuchaseListWin(QtWidgets.QMainWindow):
         self.btn_addinven_2 = QtWidgets.QPushButton(self.centralwidget)
         self.btn_addinven_2.setGeometry(QtCore.QRect(30, 420, 101, 41))
         self.btn_addinven_2.setObjectName("btn_addinven_2")
+        self.btn_addinven_3 = QtWidgets.QPushButton(self.centralwidget)
+        self.btn_addinven_3.setGeometry(QtCore.QRect(140, 420, 101, 41))
+        self.btn_addinven_3.setObjectName("btn_addinven_3")
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QtWidgets.QMenuBar(MainWindow)
         self.menubar.setGeometry(QtCore.QRect(0, 0, 772, 21))
@@ -62,18 +74,27 @@ class PuchaseListWin(QtWidgets.QMainWindow):
         self.label.setText(_translate("MainWindow", "판매관리"))
         self.label_username.setText(_translate("MainWindow", "사용자:"))
         self.btn_addinven_2.setText(_translate("MainWindow", "재고목록"))
+        self.btn_addinven_3.setText(_translate("MainWindow", "프로필로"))
 
+    def SetUserData(self, user_data):
+        self.user_name = user_data["name"]
+        self.user_sex = user_data["sex"]
+        self.user_type = user_data["user_type"]
+        self.user_brth = user_data["brth"]
+        self.user_regist = user_data["register_date"]
 
     #재고목록 refresh
     def loadPuchaseList(self):
         self.tableWidget.reset();
-        inven_list = DBconnect.SqlCommandResult("select * from product_purchase where user_id = 'test_id'")
-        header_list = list(inven_list[0].keys())
-        self.tableWidget.setHorizontalHeaderLabels(header_list)
-        self.tableWidget.setColumnCount(len(inven_list[0]))
-        self.tableWidget.setRowCount(len(inven_list))
+        sql = "select * from product_purchase where user_id = '{}'".format(self.user_id)
+        print(sql)
+        inven_list = DBconnect.SqlCommandResult(sql)
+        try:
+            header_list = list(inven_list[0].keys())
+            self.tableWidget.setHorizontalHeaderLabels(header_list)
+            self.tableWidget.setColumnCount(len(inven_list[0]))
+            self.tableWidget.setRowCount(len(inven_list))
 
-        if inven_list != -1:
             for row, item in enumerate(inven_list):
                 # print(x,item)
                 for col, key in enumerate(item.keys()):
@@ -83,18 +104,20 @@ class PuchaseListWin(QtWidgets.QMainWindow):
 
             self.tableWidget.horizontalHeader().setSectionResizeMode(0, QtWidgets.QHeaderView.Stretch)
             self.tableWidget.horizontalHeader().setSectionResizeMode(len(inven_list[0])-1, QtWidgets.QHeaderView.Stretch)
-        else:
-            print("")
-            # do nothing
+        except Exception as e:
+            traceback.print_exc()
 
     def btnToInven(self):
-        InventoryPage.startInventoryPage()
         self.close()
+        InventoryPage.startInventoryPage(self.user_id)
+
+    def btnToProfile(self):
+        self.close()
+        UserProfile_seller.StartUserProfile_customer(self.user_id)
 
 
-
-
-def startPuchaseListPage():
+def startPuchaseListPage(input_id):
     global mywindow
-    mywindow = PuchaseListWin()
+    mywindow = PuchaseListWin(input_id)
+    mywindow.SetUserData(DBconnect.RequestUserData(input_id))
     mywindow.show()

@@ -3,45 +3,64 @@ from PyQt5.QtGui import QIntValidator
 from PyQt5.QtWidgets import *
 import datetime
 import DBconnect
-import PuchaseList
+import PuchaseListPage
 from functools import partial
 import traceback
 
+import UserProfile_seller
+
+
 class InventoryWin(QtWidgets.QMainWindow):
-    def __init__(self):
+    def __init__(self, id_input):
         super().__init__()
         self.setupUi(self)
         self.tableWidget.horizontalHeader().setResizeContentsPrecision(QHeaderView.ResizeToContents)
         self.tableWidget.horizontalHeader().setStretchLastSection((True))
 
-        #버튼 이벤트 추가
+        # id 추가
+        self.user_id = id_input
+        self.user_name = None
+        self.user_sex = None
+        self.user_type = None
+        self.user_brth = None
+        self.user_regist = None
+
+        self.label_username.setText("사용자 : {}".format(self.user_id))
+
+        # 버튼 이벤트 추가
         self.btn_addinven.clicked.connect(self.addInven)
         self.btn_purchaseList.clicked.connect(self.btnToPurchaseList)
         self.btn_profile.clicked.connect(self.btnToProfile)
 
+        # self.input_quantity.settext("quantity")
+        self.input_quantity.setValidator(QIntValidator(0, 100, self))
+        # self.input_quantity.settext("price")
+        self.input_price.setValidator(QIntValidator(0, 9999999, self))
 
-        #self.input_quantity.settext("quantity")
-        self.input_quantity.setValidator(QIntValidator(0,100,self))
-        #self.input_quantity.settext("price")
-        self.input_price.setValidator(QIntValidator(0,9999999,self))
-
-        #추후 함수화시킬 예정
+        # 추후 함수화시킬 예정
         index_product = DBconnect.SqlCommandResult("Select name from product")
         self.loadInventory()
-        #print(type(index_product.values()))
+        # print(type(index_product.values()))
 
         if index_product != -1:
-           for i,item in enumerate(index_product):
-               for key in item.keys() :
-                   #print(i,key)
-                   #print(type(item[key]))
-                   #print(item[key])
-                   self.listWidget.addItem(item[key])
-               #print(type(str(item.values())))
-               #print(item.values())
-        else :
+            for i, item in enumerate(index_product):
+                for key in item.keys():
+                    # print(i,key)
+                    # print(type(item[key]))
+                    # print(item[key])
+                    self.listWidget.addItem(item[key])
+                # print(type(str(item.values())))
+                # print(item.values())
+        else:
             self.listWidget.addItem("no items")
         self.listWidget.setCurrentRow(0)
+
+    def SetUserData(self, user_data):
+        self.user_name = user_data["name"]
+        self.user_sex = user_data["sex"]
+        self.user_type = user_data["user_type"]
+        self.user_brth = user_data["brth"]
+        self.user_regist = user_data["register_date"]
 
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
@@ -114,73 +133,64 @@ class InventoryWin(QtWidgets.QMainWindow):
         self.btn_profile.setText(_translate("MainWindow", "프로필로"))
         self.label_4.setText(_translate("MainWindow", "상품목록"))
 
-    #재고목록 refresh
+    # 재고목록 refresh
     def loadInventory(self):
         self.tableWidget.reset();
-        inven_list = DBconnect.SqlCommandResult("select * from product_register where user_id = 'test_id'")
-        header_list = list(inven_list[0].keys())
-        print(type(header_list))
-        header_list.append(" ")
-        #header_list.append(" ")
-        self.tableWidget.setHorizontalHeaderLabels(header_list)
-        self.tableWidget.setColumnCount(len(inven_list[0])+1)
-        self.tableWidget.setRowCount(len(inven_list))
+        sql = "select product_id, date, quantity, price from product_register where user_id = '{}'".format(self.user_id)
+        inven_list = DBconnect.SqlCommandResult(sql)
 
-        # print(len(inven_list))
-        # print(len(inven_list[0]))
-        tmp = 0;
-        if inven_list != -1:
+        try:
+            header_list = list(inven_list[0].keys())
+            print(header_list)
+            header_list.append(" ")
+            # header_list.append(" ")
+            self.tableWidget.setColumnCount(len(header_list))
+            self.tableWidget.setRowCount(len(inven_list))
+            self.tableWidget.setHorizontalHeaderLabels(header_list)
+
+            # print(len(inven_list))
+            # print(len(inven_list[0]))
+            tmp = 0
             for row, item in enumerate(inven_list):
                 # print(x,item)
                 for col, key in enumerate(item.keys()):
-                    #print(col, item[key])
                     self.tableWidget.setItem(row, col, QTableWidgetItem("{}".format(item[key])))
-                #print(tmp,len(inven_list[0]))
+                    #print(tmp,len(inven_list[0]))
 
-            for row in enumerate(inven_list):
                 button = QPushButton("삭제", self)
-                self.tableWidget.setCellWidget(tmp, len(inven_list[0]), button)
-                try:
-                    #print(tmp)
-                    print(self.tableWidget.item(tmp, 0).text())
-                    button.clicked.connect(partial(self.removeInven, self.tableWidget.item(tmp, 0).text()))
+                self.tableWidget.setCellWidget(row, len(header_list)-1, button)
+                button.clicked.connect(partial(self.removeInven, self.tableWidget.item(row, 0).text))
+                self.tableWidget.horizontalHeader().setSectionResizeMode(0, QtWidgets.QHeaderView.Stretch)
+                self.tableWidget.horizontalHeader().setSectionResizeMode(len(inven_list[0]),QtWidgets.QHeaderView.Stretch)
+        except Exception as e:
+            print(e)
+            traceback.print_exc()
 
-                except Exception as e:
-                    print(e)
-                    traceback.print_exc()
-                tmp += 1
-
-            self.tableWidget.horizontalHeader().setSectionResizeMode(0, QtWidgets.QHeaderView.Stretch)
-            self.tableWidget.horizontalHeader().setSectionResizeMode(len(inven_list[0]), QtWidgets.QHeaderView.Stretch)
-        else:
-            print("")
-            # do nothing
-
-
-    #재고목록 추가
+    # 재고목록 추가
     def addInven(self):
-        #self.input_quantity.text()
-        #print(self.listWidget.currentItem().text())
-        #print(self.input_quantity.text())
-        #print(self.input_price.text())
+        # self.input_quantity.text()
+        # print(self.listWidget.currentItem().text())
+        # print(self.input_quantity.text())
+        # print(self.input_price.text())
         now = datetime.datetime.now().strftime("%Y-%m-%d")
         print(now)
 
-        itemtype = {'ramen':1,'drink':2,'snack':3,'bottlewater':4,
-                    'television':11,'refrigerator':12,'airconditioner':13,'washingmachine':14,
-                    'pencil':21,'pen':23,'sharp':23,'note':24,
-                    'shose':31,'pants':32,'underwear':33,'shirts':34}
+        itemtype = {'ramen': 1, 'drink': 2, 'snack': 3, 'bottlewater': 4,
+                    'television': 11, 'refrigerator': 12, 'airconditioner': 13, 'washingmachine': 14,
+                    'pencil': 21, 'pen': 23, 'sharp': 23, 'note': 24,
+                    'shose': 31, 'pants': 32, 'underwear': 33, 'shirts': 34}
         product_id = itemtype[self.listWidget.currentItem().text()]
         quant = self.input_quantity.text()
         price = self.input_price.text()
-        sql = "insert into product_register (user_id,product_id,date,quantity,price) values('{}',{},'{}',{},{})".format("test_id", product_id, now, quant, price)
-        #print(sql)
+        sql = "insert into product_register (user_id,product_id,date,quantity,price) values('{}',{},'{}',{},{})".format(
+            self.user_id, product_id, now, quant, price)
+        # print(sql)
         result = DBconnect.SqlCommand(sql)
         self.loadInventory()
 
-    #해당 row 삭제(확인 메시지 뜬후)
+    # 해당 row 삭제(확인 메시지 뜬후)
     def removeInven(self, num):
-        reply = QMessageBox.question(self,'Message','삭제하시겠습니까?',QMessageBox.Yes|QMessageBox.No,QMessageBox.No)
+        reply = QMessageBox.question(self, 'Message', '삭제하시겠습니까?', QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
 
         if reply == QMessageBox.Yes:
             try:
@@ -192,17 +202,20 @@ class InventoryWin(QtWidgets.QMainWindow):
                 self.loadInventory()
             except Exception as e:
                 traceback.print_exc()
+
     def btnToProfile(self):
-        print("test")
-        #self.close()
-    def btnToPurchaseList(self):
-        PuchaseList.startPuchaseListPage()
         self.close()
+        UserProfile_seller.StartUserProfile_customer(self.user_id)
+
+
+    def btnToPurchaseList(self):
+        self.close()
+        PuchaseListPage.startPuchaseListPage(self.user_id)
 
 
 
-
-def startInventoryPage():
+def startInventoryPage(id_input):
     global mywindow
-    mywindow = InventoryWin()
+    mywindow = InventoryWin(id_input)
+    mywindow.SetUserData(DBconnect.RequestUserData(id_input))
     mywindow.show()

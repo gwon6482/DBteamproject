@@ -29,7 +29,6 @@ class LoginWin(QtWidgets.QMainWindow):
                 DBconnect.show_popup_ok("login success","login success")
                 #여기에 해당 프로필로 이동 구현
 
-
                 self.GotoProfile_user(id)
 
 
@@ -54,11 +53,11 @@ class LoginWin(QtWidgets.QMainWindow):
     def GotoProfile_user(self,input_id):
         self.close()
         user_type = DBconnect.RequestUserData(input_id)["user_type"]
+        print(user_type)
         if user_type == 1:
             UserProfile_customer.StartUserProfile_customer(input_id)
         else:
             UserProfile_seller.StartUserProfile_customer(input_id)
-
 
 
 

@@ -69,6 +69,19 @@
      <string>재고목록</string>
     </property>
    </widget>
+   <widget class="QPushButton" name="btn_addinven_3">
+    <property name="geometry">
+     <rect>
+      <x>140</x>
+      <y>420</y>
+      <width>101</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>프로필로</string>
+    </property>
+   </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">

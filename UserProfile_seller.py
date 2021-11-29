@@ -1,11 +1,23 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 import DBconnect
 
+import traceback
+
+import InventoryPage
+import PuchaseListPage
+
+
+
 
 class UserProfilePage_seller(QtWidgets.QMainWindow):
     def __init__(self,id_input):
         super().__init__()
         self.setupUi(self)
+        try:
+            self.SalesHistoryListButton.clicked.connect(self.SalesHistoryListButtonClicked)
+            self.ProductListButton.clicked.connect(self.ProductListButtonClicked)
+        except Exception as e:
+            traceback.print_exc()
 
         self.user_id = id_input
         self.user_name = None
@@ -105,6 +117,18 @@ class UserProfilePage_seller(QtWidgets.QMainWindow):
         self.label.setText(_translate("Dialog", "<html><head/><body><p><span style=\" font-size:36pt;\">user profile</span></p></body></html>"))
         self.label_3.setText(_translate("Dialog", "ID"))
         self.label_7.setText(_translate("Dialog", "RigisterDay"))
+
+    def SalesHistoryListButtonClicked(self):
+        self.close()
+        PuchaseListPage.startPuchaseListPage(self.user_id)
+
+    def ProductListButtonClicked(self):
+        try:
+            self.close()
+            InventoryPage.startInventoryPage(self.user_id)
+        except Exception as e :
+            print(e)
+            traceback.print_exc()
 
 def StartUserProfile_customer(id_input):
     global mywindow

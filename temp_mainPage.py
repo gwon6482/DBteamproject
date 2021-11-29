@@ -15,7 +15,7 @@ class temp_main(QtWidgets.QMainWindow):
         
         """
     def testbuttonClicked(self):
-        InventoryPage.startInventoryPage()
+        InventoryPage.startInventoryPage("test_k")
         self.close()
 
 
@@ -35,8 +35,6 @@ class temp_main(QtWidgets.QMainWindow):
 
         self.retranslateUi(Dialog)
         QtCore.QMetaObject.connectSlotsByName(Dialog)
-
-
 
 
 
