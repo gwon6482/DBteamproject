@@ -23,7 +23,14 @@ class purchase2(QtWidgets.QMainWindow):
         self.user_brth = None
         self.user_regist = None
         print("고객",self.user_id,"판매자",self.seller_id)
-        self.loadInventory()
+        inven_list = DBconnect.SqlCommandResult(
+            "select register_log_id from product_register where user_id = '{}'".format(self.seller_id))
+        print(inven_list)
+        if not inven_list:
+            print("공란")
+        elif inven_list != -1:
+            self.loadInventory()
+            print("")
 
 
     #판매자 목록 창으로 복귀

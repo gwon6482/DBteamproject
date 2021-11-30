@@ -29,9 +29,17 @@ class purchase1(QtWidgets.QMainWindow):
         self.user_regist = None
 
 
-        loadseller = DBconnect.SqlCommandResult("Select name from user where user_type=0")
+        loadseller = DBconnect.SqlCommandResult("Select user_id from user where user_type=0")
         loadbookmark = DBconnect.SqlCommandResult("select seller_id from bookmark where user_id='{}'".format(self.user_id))
-        self.loadInventory()
+        inven_list = DBconnect.SqlCommandResult(
+            "select user_id from product_purchase where user_id = '{}'".format(self.user_id))
+        print(inven_list)
+        if not inven_list:
+            print("공란")
+        elif inven_list != -1:
+            self.loadInventory()
+            print("")
+
 
         if loadseller != -1:
             for i, item in enumerate(loadseller):
@@ -73,16 +81,13 @@ class purchase1(QtWidgets.QMainWindow):
     #북마크 추가
 
     def add_bookmark(self):
-        #현재 선택된 리스트의 내용 출력
-        #self.listWidget.currentItem().text()
-        #이름을 통해 id를 찾는 쿼리
-        sql1 = "select user_id from user where name = '{}';".format(self.listWidget.currentItem().text())
-        #print(sql1)
-        result = DBconnect.SqlCommandResult(sql1)
+        name = self.listWidget.currentItem().text()
+        user = self.user_id
 
-        name = result[0]['user_id']
-        user=self.user_id
         print(user)
+
+
+
         #정상적인 쿼리
         sql = "insert into bookmark (user_id, seller_id) values('{}','{}');".format(user, name)
         print(sql)
@@ -99,12 +104,6 @@ class purchase1(QtWidgets.QMainWindow):
 
     def remove_bookmark(self):
 
-        #sql1 = "select user_id from user where name = '{}';".format(self.listWidget_2.currentItem().text())
-
-        #result = DBconnect.SqlCommandResult(sql1)
-        #print(sql1)
-        #userid=result[0]
-        #print(userid)
 
         seller = self.listWidget_2.currentItem().text()
         print(seller)
