@@ -14,13 +14,12 @@ class purchase1(QtWidgets.QMainWindow):
         self.setupUi(self)
 
 
-        self.pushButton.clicked.connect(self.pushButton_click) #판매자 물품보기
+        self.pushButton.clicked.connect(self.pushButton_click) #북마크 목록에서 선탟
         self.pushButton_2.clicked.connect(self.add_bookmark) #북마크 추가
         self.pushButton_3.clicked.connect(self.Loginbutton_click) #이전으로
         self.pushButton_4.clicked.connect(self.rating) #평점추가
         self.pushButton_5.clicked.connect(self.remove_bookmark)#북마크 삭제
-        self.lineEdit.setValidator(QIntValidator(0,100,self))
-        self.lineEdit.setValidator(QIntValidator(0, 100, self))
+        self.pushButton_6.clicked.connect(self.pushButton_click_a)#판매자 목록에서 판매자 선택
         self.user_id = id_input
         self.user_name = None
         self.user_sex = None
@@ -30,7 +29,7 @@ class purchase1(QtWidgets.QMainWindow):
 
 
         loadseller = DBconnect.SqlCommandResult("Select user_id from user where user_type=0")
-        loadbookmark = DBconnect.SqlCommandResult("select seller_id from bookmark where user_id='{}'".format(self.user_id))
+        loadbookmark = DBconnect.SqlCommandResult("select distinct seller_id from bookmark where user_id='{}'".format(self.user_id))
         inven_list = DBconnect.SqlCommandResult(
             "select user_id from product_purchase where user_id = '{}'".format(self.user_id))
         print(inven_list)
@@ -144,6 +143,13 @@ class purchase1(QtWidgets.QMainWindow):
         purchase2.purchase2Main(user,seller)
         self.close()
 
+    def pushButton_click_a(self):
+        user=self.user_id
+        seller=self.listWidget.currentItem().text()
+        print(user,seller)
+        purchase2.purchase2Main(user,seller)
+        self.close()
+
     #이전으로
 
     def Loginbutton_click(self):
@@ -162,15 +168,6 @@ class purchase1(QtWidgets.QMainWindow):
         self.user_brth = user_data["brth"]
         self.user_regist = user_data["register_date"]
 
-
-
-
-
-
-
-
-
-
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
         MainWindow.resize(832, 601)
@@ -184,29 +181,30 @@ class purchase1(QtWidgets.QMainWindow):
         self.listWidget = QtWidgets.QListWidget(self.tab)
         self.listWidget.setGeometry(QtCore.QRect(0, 0, 411, 361))
         self.listWidget.setObjectName("listWidget")
+        self.pushButton_6 = QtWidgets.QPushButton(self.tab)
+        self.pushButton_6.setGeometry(QtCore.QRect(280, 330, 131, 31))
+        self.pushButton_6.setMouseTracking(True)
+        self.pushButton_6.setObjectName("pushButton_6")
         self.tabWidget.addTab(self.tab, "")
         self.tab_2 = QtWidgets.QWidget()
         self.tab_2.setObjectName("tab_2")
         self.listWidget_2 = QtWidgets.QListWidget(self.tab_2)
         self.listWidget_2.setGeometry(QtCore.QRect(0, 0, 411, 361))
         self.listWidget_2.setObjectName("listWidget_2")
+        self.pushButton = QtWidgets.QPushButton(self.tab_2)
+        self.pushButton.setGeometry(QtCore.QRect(280, 330, 131, 31))
+        self.pushButton.setMouseTracking(True)
+        self.pushButton.setObjectName("pushButton")
         self.tabWidget.addTab(self.tab_2, "")
         self.label = QtWidgets.QLabel(self.centralwidget)
         self.label.setGeometry(QtCore.QRect(0, 30, 71, 21))
         self.label.setObjectName("label")
-        self.pushButton = QtWidgets.QPushButton(self.centralwidget)
-        self.pushButton.setGeometry(QtCore.QRect(280, 20, 131, 31))
-        self.pushButton.setMouseTracking(True)
-        self.pushButton.setObjectName("pushButton")
         self.pushButton_2 = QtWidgets.QPushButton(self.centralwidget)
         self.pushButton_2.setGeometry(QtCore.QRect(240, 70, 75, 23))
         self.pushButton_2.setObjectName("pushButton_2")
         self.pushButton_3 = QtWidgets.QPushButton(self.centralwidget)
         self.pushButton_3.setGeometry(QtCore.QRect(760, 0, 75, 23))
         self.pushButton_3.setObjectName("pushButton_3")
-        self.lineEdit = QtWidgets.QLineEdit(self.centralwidget)
-        self.lineEdit.setGeometry(QtCore.QRect(160, 30, 113, 20))
-        self.lineEdit.setObjectName("lineEdit")
         self.label_2 = QtWidgets.QLabel(self.centralwidget)
         self.label_2.setGeometry(QtCore.QRect(460, 30, 61, 21))
         self.label_2.setObjectName("label_2")
@@ -249,10 +247,11 @@ class purchase1(QtWidgets.QMainWindow):
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
+        self.pushButton_6.setText(_translate("MainWindow", "판매자 물품 보기"))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab), _translate("MainWindow", "Tab 1"))
+        self.pushButton.setText(_translate("MainWindow", "판매자 물품 보기"))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_2), _translate("MainWindow", "Tab 2"))
         self.label.setText(_translate("MainWindow", "판매자 목록"))
-        self.pushButton.setText(_translate("MainWindow", "판매자 물품 보기"))
         self.pushButton_2.setText(_translate("MainWindow", "북마크 추가"))
         self.pushButton_3.setText(_translate("MainWindow", "이전으로"))
         self.label_2.setText(_translate("MainWindow", "구매내역"))

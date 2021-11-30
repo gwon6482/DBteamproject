@@ -73,7 +73,7 @@ class purchase2(QtWidgets.QMainWindow):
         quantity_b = result[0]['quantity']
         user=self.user_id
         print(quantity_a, quantity_b)
-        if quantity_a < quantity_b:
+        if quantity_a <= quantity_b:
 
             register_log_id_a = self.tableWidget.selectedItems()[0].text()
             print(register_log_id_a)
