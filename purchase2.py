@@ -14,7 +14,7 @@ class purchase2(QtWidgets.QMainWindow):
         self.setupUi(self)
         self.pushButton.clicked.connect(self.check) #구매하지
         self.pushButton_2.clicked.connect(self.pushButton_2_click)#이전으로
-        self.loadInventory()
+
         self.user_id = id_input
         self.seller_id = seller_input
         self.user_name = None
@@ -23,7 +23,7 @@ class purchase2(QtWidgets.QMainWindow):
         self.user_brth = None
         self.user_regist = None
         print("고객",self.user_id,"판매자",self.seller_id)
-
+        self.loadInventory()
 
 
     #판매자 목록 창으로 복귀
@@ -36,7 +36,8 @@ class purchase2(QtWidgets.QMainWindow):
 
     #판매자 재고목록 확인
     def loadInventory(self):
-        user="test_id"
+        user=self.seller_id
+        print(user)
         self.tableWidget.reset();
         inven_list = DBconnect.SqlCommandResult("select * from product_register where user_id = '{}'".format(user))
         self.tableWidget.setHorizontalHeaderLabels(inven_list[0].keys())
@@ -52,35 +53,7 @@ class purchase2(QtWidgets.QMainWindow):
         else:
             print("")
 
-    #구매 기록
-    def purchase(self):
 
-
-
-
-        register_log_id_a=self.tableWidget.selectedItems()[0].text()
-        print(register_log_id_a)
-        seller_id=self.tableWidget.selectedItems()[1].text()
-        print(seller_id)
-        now = datetime.datetime.now().strftime("%Y-%m-%d")
-        print(now)
-        quantity_a = self.spinBox.value()
-        print(quantity_a)
-        price = self.tableWidget.selectedItems()[5].text()
-        print(price)
-
-
-        item = self.tableWidget.selectedItems()[2].text()
-
-        sql = "insert into product_purchase (user_id,product_id,refund,date,quantity,price) values('{}',{},{},'{}',{},{});".format("test_id",item,0,now,quantity_a,price)
-        print(sql)
-        result = DBconnect.SqlCommand(sql)
-        print(sql)
-        sql2 = "update product_register set quantity=quantity-{} where register_log_id='{}';".format(quantity_a, register_log_id_a)
-        print(sql2)
-        result = DBconnect.SqlCommand(sql2)
-
-        self.loadInventory()
 
     def check(self):
         register_log_id_a = self.tableWidget.selectedItems()[0].text()
@@ -91,6 +64,7 @@ class purchase2(QtWidgets.QMainWindow):
         print(sql)
         result = DBconnect.SqlCommandResult(sql)
         quantity_b = result[0]['quantity']
+        user=self.user_id
         print(quantity_a, quantity_b)
         if quantity_a < quantity_b:
 
@@ -108,7 +82,7 @@ class purchase2(QtWidgets.QMainWindow):
             item = self.tableWidget.selectedItems()[2].text()
 
             sql = "insert into product_purchase (user_id,product_id,refund,date,quantity,price) values('{}',{},{},'{}',{},{});".format(
-                "test_id", item, 0, now, quantity_a, price)
+                user, item, 0, now, quantity_a, price)
             print(sql)
             result = DBconnect.SqlCommand(sql)
             print(sql)
@@ -124,11 +98,7 @@ class purchase2(QtWidgets.QMainWindow):
             print("구매불가")
 
 
-    #구매시 재고목록 차감
-    def removeInven(id,quan):
-        sql2 = "update product_register set quantity=quantity-quan where register_log_id=id;"
-        print(sql2)
-        result = DBconnect.SqlCommand(sql2)
+
 
 
 
@@ -221,5 +191,6 @@ def purchase2Main(id_input,seller_input):
     global mywindow
     mywindow = purchase2(id_input,seller_input)
     mywindow.SetUserData(DBconnect.RequestUserData(id_input))
+
     mywindow.show()
 

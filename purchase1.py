@@ -55,7 +55,7 @@ class purchase1(QtWidgets.QMainWindow):
 
     def loadInventory(self):
         self.tableWidget.reset();
-        user="test_id"
+        user=self.user_id
         inven_list = DBconnect.SqlCommandResult("select product_id,date,quantity,price from product_purchase where user_id = '{}'".format(user))
         self.tableWidget.setHorizontalHeaderLabels(inven_list[0].keys())
         self.tableWidget.setColumnCount(len(inven_list[0]))
@@ -140,7 +140,8 @@ class purchase1(QtWidgets.QMainWindow):
 
     def pushButton_click(self):
         user=self.user_id
-        seller="test_id"
+        seller=self.listWidget_2.currentItem().text()
+        print(user,seller)
         purchase2.purchase2Main(user,seller)
         self.close()
 
