@@ -9,7 +9,7 @@ import pymysql
 
 class purchase1(QtWidgets.QMainWindow):
 
-    def __init__(self):
+    def __init__(self,id_input):
         super().__init__()
         self.setupUi(self)
 
@@ -21,11 +21,16 @@ class purchase1(QtWidgets.QMainWindow):
         self.pushButton_5.clicked.connect(self.remove_bookmark)#북마크 삭제
         self.lineEdit.setValidator(QIntValidator(0,100,self))
         self.lineEdit.setValidator(QIntValidator(0, 100, self))
+        self.user_id = id_input
+        self.user_name = None
+        self.user_sex = None
+        self.user_type = None
+        self.user_brth = None
+        self.user_regist = None
 
 
-
-        loadseller = DBconnect.SqlCommandResult("Select name from user where user_type=1")
-        loadbookmark = DBconnect.SqlCommandResult("select seller_id from bookmark where user_id='test_id'")
+        loadseller = DBconnect.SqlCommandResult("Select name from user where user_type=0")
+        loadbookmark = DBconnect.SqlCommandResult("select seller_id from bookmark where user_id='{}'".format(self.user_id))
         self.loadInventory()
 
         if loadseller != -1:
@@ -50,7 +55,8 @@ class purchase1(QtWidgets.QMainWindow):
 
     def loadInventory(self):
         self.tableWidget.reset();
-        inven_list = DBconnect.SqlCommandResult("select product_id,date,quantity,price from product_purchase where user_id = 'test_id'")
+        user="test_id"
+        inven_list = DBconnect.SqlCommandResult("select product_id,date,quantity,price from product_purchase where user_id = '{}'".format(user))
         self.tableWidget.setHorizontalHeaderLabels(inven_list[0].keys())
         self.tableWidget.setColumnCount(len(inven_list[0]))
         self.tableWidget.setRowCount(len(inven_list))
@@ -75,13 +81,14 @@ class purchase1(QtWidgets.QMainWindow):
         result = DBconnect.SqlCommandResult(sql1)
 
         name = result[0]['user_id']
-
+        user=self.user_id
+        print(user)
         #정상적인 쿼리
-        sql = "insert into bookmark (user_id, seller_id) values('{}','{}');".format("test_id", name)
-        #print(sql)
+        sql = "insert into bookmark (user_id, seller_id) values('{}','{}');".format(user, name)
+        print(sql)
 
         result = DBconnect.SqlCommand(sql)
-        purchase1Main()
+        purchase1Main(user)
         self.close()
         #추후 북마크 리스트를 보여주는 코드 추가해주세요.
 
@@ -101,10 +108,12 @@ class purchase1(QtWidgets.QMainWindow):
 
         seller = self.listWidget_2.currentItem().text()
         print(seller)
-        sql = "delete from bookmark where user_id = 'test_id' AND seller_id = '{}';".format(seller)
+        user = self.user_id
+        print(user)
+        sql = "delete from bookmark where user_id = '{}' AND seller_id = '{}';".format(user,seller)
         print(sql)
         result = DBconnect.SqlCommand(sql)
-        purchase1Main()
+        purchase1Main(user)
         self.close()
 
 
@@ -115,9 +124,11 @@ class purchase1(QtWidgets.QMainWindow):
         #register_log=self.tableWidget.selectedItems()[0].text()
         #print(register_log)
         print(self.spinBox.value())
+        user = self.user_id
         sql = "insert into rating (product_id,user_id,score) value('{}','{}',{});".format(self.tableWidget.selectedItems()[0].text(),
-                                                                                         "test_id",
+                                                                                         user,
                                                                                          self.spinBox.value())
+        print(sql)
         result = DBconnect.SqlCommand(sql)
 
 
@@ -128,7 +139,9 @@ class purchase1(QtWidgets.QMainWindow):
     #판매자 물품 보기
 
     def pushButton_click(self):
-        purchase2.purchase2Main()
+        user=self.user_id
+        seller="test_id"
+        purchase2.purchase2Main(user,seller)
         self.close()
 
     #이전으로
@@ -136,6 +149,27 @@ class purchase1(QtWidgets.QMainWindow):
     def Loginbutton_click(self):
         LoginPage.startLoginPage()
         self.close()
+
+
+
+
+
+
+    def SetUserData(self,user_data):
+        self.user_name = user_data["name"]
+        self.user_sex = user_data["sex"]
+        self.user_type = user_data["user_type"]
+        self.user_brth = user_data["brth"]
+        self.user_regist = user_data["register_date"]
+
+
+
+
+
+
+
+
+
 
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
@@ -180,8 +214,16 @@ class purchase1(QtWidgets.QMainWindow):
         self.tableWidget.setGeometry(QtCore.QRect(450, 110, 361, 361))
         self.tableWidget.setSelectionBehavior(QtWidgets.QAbstractItemView.SelectRows)
         self.tableWidget.setObjectName("tableWidget")
-        self.tableWidget.setColumnCount(0)
+        self.tableWidget.setColumnCount(4)
         self.tableWidget.setRowCount(0)
+        item = QtWidgets.QTableWidgetItem()
+        self.tableWidget.setHorizontalHeaderItem(0, item)
+        item = QtWidgets.QTableWidgetItem()
+        self.tableWidget.setHorizontalHeaderItem(1, item)
+        item = QtWidgets.QTableWidgetItem()
+        self.tableWidget.setHorizontalHeaderItem(2, item)
+        item = QtWidgets.QTableWidgetItem()
+        self.tableWidget.setHorizontalHeaderItem(3, item)
         self.pushButton_4 = QtWidgets.QPushButton(self.centralwidget)
         self.pushButton_4.setGeometry(QtCore.QRect(720, 80, 75, 23))
         self.pushButton_4.setObjectName("pushButton_4")
@@ -214,13 +256,22 @@ class purchase1(QtWidgets.QMainWindow):
         self.pushButton_2.setText(_translate("MainWindow", "북마크 추가"))
         self.pushButton_3.setText(_translate("MainWindow", "이전으로"))
         self.label_2.setText(_translate("MainWindow", "구매내역"))
+        item = self.tableWidget.horizontalHeaderItem(0)
+        item.setText(_translate("MainWindow", "상품id"))
+        item = self.tableWidget.horizontalHeaderItem(1)
+        item.setText(_translate("MainWindow", "구매일자"))
+        item = self.tableWidget.horizontalHeaderItem(2)
+        item.setText(_translate("MainWindow", "수량"))
+        item = self.tableWidget.horizontalHeaderItem(3)
+        item.setText(_translate("MainWindow", "가격"))
         self.pushButton_4.setText(_translate("MainWindow", "평점추가"))
         self.pushButton_5.setText(_translate("MainWindow", "북마크 삭제"))
 
 
 
-def purchase1Main():
+def purchase1Main(id_input):
     global mywindow
-    mywindow = purchase1()
+    mywindow = purchase1(id_input)
+    mywindow.SetUserData(DBconnect.RequestUserData(id_input))
     mywindow.show()
 

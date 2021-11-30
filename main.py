@@ -1,10 +1,10 @@
 import sys
 from PyQt5.QtWidgets import *
 import temp_mainPage
+import LoginPage
 import purchase1
 import LoginPage
 import purchase2
-
 """
 
 main의 내용은 고정입니다.
@@ -16,9 +16,9 @@ LoginPage.StartLogin() 으로 바꿔주면 앱이 완성됩니다.
 """
 
 app = QApplication(sys.argv)    #앱 생성
-mywindow = None                 #윈도우 생성
-purchase1.purchase1Main()   #임시 메인페이지 불러오기
-#purchase2.purchase2Main()
+mywindow = None     #윈도우 생성
+#purchase1.purchase1Main("test_id")
+temp_mainPage.StartTempMain()   #임시 메인페이지 불러오기
 sys.exit(app.exec_())           #앱 실행 및 종료
 
 
