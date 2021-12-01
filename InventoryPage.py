@@ -155,6 +155,7 @@ class InventoryWin(QtWidgets.QMainWindow):
                 # print(x,item)
                 for col, key in enumerate(item.keys()):
                     self.tableWidget.setItem(row, col, QTableWidgetItem("{}".format(item[key])))
+
                     #print(tmp,len(inven_list[0]))
 
                 button = QPushButton("삭제", self)
@@ -162,9 +163,13 @@ class InventoryWin(QtWidgets.QMainWindow):
                 button.clicked.connect(partial(self.removeInven, self.tableWidget.item(row, 0).text))
                 self.tableWidget.horizontalHeader().setSectionResizeMode(0, QtWidgets.QHeaderView.Stretch)
                 self.tableWidget.horizontalHeader().setSectionResizeMode(len(inven_list[0]),QtWidgets.QHeaderView.Stretch)
+                self.tableWidget.currentItemChanged.connect(self.cellchange)
         except Exception as e:
             print(e)
             traceback.print_exc()
+
+        #finally :
+            #
 
     # 재고목록 추가
     def addInven(self):
@@ -207,12 +212,15 @@ class InventoryWin(QtWidgets.QMainWindow):
         self.close()
         UserProfile_seller.StartUserProfile_customer(self.user_id)
 
-
     def btnToPurchaseList(self):
         self.close()
         PuchaseListPage.startPuchaseListPage(self.user_id)
 
-
+    def cellchange(self):
+        item = self.tableWidget.selectedItems()
+        print("current row : {}".format(self.tableWidget.currentRow()))
+        for i in item:
+            print(i.text())
 
 def startInventoryPage(id_input):
     global mywindow

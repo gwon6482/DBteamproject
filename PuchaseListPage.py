@@ -86,20 +86,38 @@ class PuchaseListWin(QtWidgets.QMainWindow):
     #재고목록 refresh
     def loadPuchaseList(self):
         self.tableWidget.reset();
-        sql = "select * from product_purchase where user_id = '{}'".format(self.user_id)
+        sql = "select * from product_purchase;"
         print(sql)
         inven_list = DBconnect.SqlCommandResult(sql)
+
+        itemtype = {1: 'ramen', 2: 'drink',3: 'snack', 4: 'bottlewater',
+                    11: 'television', 12: 'refrigerator', 13:'airconditioner', 14:'washingmachine',
+                    21: 'pencil' , 22: 'pen',23: 'sharp', 24: 'note',
+                    31: 'shose', 32:'pants',33:'underwear', 34:'shirts' }
+
+
         try:
             header_list = list(inven_list[0].keys())
-            self.tableWidget.setHorizontalHeaderLabels(header_list)
             self.tableWidget.setColumnCount(len(inven_list[0]))
             self.tableWidget.setRowCount(len(inven_list))
+            self.tableWidget.setHorizontalHeaderLabels(header_list)
 
             for row, item in enumerate(inven_list):
                 # print(x,item)
                 for col, key in enumerate(item.keys()):
-                    #print(col, item[key])
-                    self.tableWidget.setItem(row, col, QTableWidgetItem("{}".format(item[key])))
+                    if col == 2 :
+                        print(type(item[key]))
+                        print(item[key])
+                        self.tableWidget.setItem(row, col, QTableWidgetItem("{}".format(itemtype[1])))
+                    elif col == 3:
+                        txt = "test"
+                        if(item[key] == 1):
+                            txt = "환불처리됨."
+                        else:
+                            txt = "정상처리됨."
+                        self.tableWidget.setItem(row, col, QTableWidgetItem(txt))
+                    else:
+                        self.tableWidget.setItem(row, col, QTableWidgetItem("{}".format(item[key])))
                 #print(tmp,len(inven_list[0]))
 
             self.tableWidget.horizontalHeader().setSectionResizeMode(0, QtWidgets.QHeaderView.Stretch)
