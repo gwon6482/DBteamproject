@@ -125,8 +125,10 @@ class InventoryWin(QtWidgets.QMainWindow):
         self.label.setText(_translate("MainWindow", "재고 관리"))
         self.label_username.setText(_translate("MainWindow", "사용자:"))
         self.btn_addinven.setText(_translate("MainWindow", "재고추가"))
-        self.input_quantity.setText(_translate("MainWindow", "quantity"))
-        self.input_price.setText(_translate("MainWindow", "price"))
+        #self.input_quantity.setText(_translate("MainWindow", "quantity"))
+        #self.input_price.setText(_translate("MainWindow", "price"))
+        self.input_quantity.setPlaceholderText("수량 입력")
+        self.input_price.setPlaceholderText("가격 입력")
         self.label_2.setText(_translate("MainWindow", "수량"))
         self.label_3.setText(_translate("MainWindow", "가격"))
         self.btn_purchaseList.setText(_translate("MainWindow", "판매기록"))
@@ -136,7 +138,7 @@ class InventoryWin(QtWidgets.QMainWindow):
     # 재고목록 refresh
     def loadInventory(self):
         self.tableWidget.reset();
-        sql = "select product_id, date, quantity, price from product_register where user_id = '{}'".format(self.user_id)
+        sql = "select register_log_id product_id, date, quantity, price from product_register where user_id = '{}'".format(self.user_id)
         inven_list = DBconnect.SqlCommandResult(sql)
 
         try:
@@ -160,7 +162,7 @@ class InventoryWin(QtWidgets.QMainWindow):
 
                 button = QPushButton("삭제", self)
                 self.tableWidget.setCellWidget(row, len(header_list)-1, button)
-                button.clicked.connect(partial(self.removeInven, self.tableWidget.item(row, 0).text))
+                button.clicked.connect(partial(self.removeInven, self.tableWidget.item(row, 0).text()))
                 self.tableWidget.horizontalHeader().setSectionResizeMode(0, QtWidgets.QHeaderView.Stretch)
                 self.tableWidget.horizontalHeader().setSectionResizeMode(len(inven_list[0]),QtWidgets.QHeaderView.Stretch)
                 self.tableWidget.currentItemChanged.connect(self.cellchange)
@@ -202,8 +204,7 @@ class InventoryWin(QtWidgets.QMainWindow):
                 print("clicked!{}".format(num))
                 # DELETE FROM product_register where register_log_id = '1' and user_id = 'test_id';
                 DBconnect.SqlCommand(
-                    "DELETE FROM product_register where register_log_id = '{}' AND  user_id = '{}';".format(num,
-                                                                                                            "test_id"))
+                    "DELETE FROM product_register where register_log_id = {} AND  user_id = '{}';".format(num,self.user_id))
                 self.loadInventory()
             except Exception as e:
                 traceback.print_exc()

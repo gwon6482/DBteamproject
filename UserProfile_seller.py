@@ -87,7 +87,7 @@ class UserProfilePage_seller(QtWidgets.QMainWindow):
         self.NameBrowser.setGeometry(QtCore.QRect(180, 100, 81, 21))
         self.NameBrowser.setObjectName("NameBrowser")
         self.label = QtWidgets.QLabel(Dialog)
-        self.label.setGeometry(QtCore.QRect(240, 20, 181, 51))
+        self.label.setGeometry(QtCore.QRect(80, 0, 500, 60))
         self.label.setAlignment(QtCore.Qt.AlignCenter)
         self.label.setObjectName("label")
         self.label_3 = QtWidgets.QLabel(Dialog)
@@ -108,15 +108,15 @@ class UserProfilePage_seller(QtWidgets.QMainWindow):
     def retranslateUi(self, Dialog):
         _translate = QtCore.QCoreApplication.translate
         Dialog.setWindowTitle(_translate("Dialog", "Dialog"))
-        self.label_4.setText(_translate("Dialog", "Sex"))
-        self.label_6.setText(_translate("Dialog", "BirthDay"))
-        self.SalesHistoryListButton.setText(_translate("Dialog", "Sales history"))
-        self.label_5.setText(_translate("Dialog", "UserType"))
-        self.ProductListButton.setText(_translate("Dialog", "Product List"))
-        self.label_2.setText(_translate("Dialog", "Name"))
-        self.label.setText(_translate("Dialog", "<html><head/><body><p><span style=\" font-size:36pt;\">user profile</span></p></body></html>"))
+        self.label_4.setText(_translate("Dialog", "성별"))
+        self.label_6.setText(_translate("Dialog", "생년월일"))
+        self.SalesHistoryListButton.setText(_translate("Dialog", "판매기록"))
+        self.label_5.setText(_translate("Dialog", "타입"))
+        self.ProductListButton.setText(_translate("Dialog", "재고목록"))
+        self.label_2.setText(_translate("Dialog", "이름"))
+        self.label.setText(_translate("Dialog", "<html><head/><body><p><span style=\" font-size:36pt;\">사용자 프로필</span></p></body></html>"))
         self.label_3.setText(_translate("Dialog", "ID"))
-        self.label_7.setText(_translate("Dialog", "RigisterDay"))
+        self.label_7.setText(_translate("Dialog", "등록일자"))
 
     def SalesHistoryListButtonClicked(self):
         self.close()

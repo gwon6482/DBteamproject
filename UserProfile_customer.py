@@ -1,5 +1,6 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 import DBconnect
+import purchase1
 
 class UserProfilePage_customer(QtWidgets.QMainWindow):
     def __init__(self,id_input):
@@ -8,6 +9,7 @@ class UserProfilePage_customer(QtWidgets.QMainWindow):
 
 
         self.setupUi(self)
+        self.ProductListButton.clicked.connect(self.product_list_Button)
 
 
         self.user_id = id_input
@@ -16,6 +18,17 @@ class UserProfilePage_customer(QtWidgets.QMainWindow):
         self.user_type = None
         self.user_brth = None
         self.user_regist = None
+
+    def product_list_Button(self):
+        user_id=self.user_id
+        self.go_product_list(user_id)
+
+
+
+    def go_product_list(self,id_input):
+        self.close()
+        purchase1.purchase1Main(id_input)
+        #StartUserProfile_customer(id_input)
 
 
 
@@ -51,7 +64,7 @@ class UserProfilePage_customer(QtWidgets.QMainWindow):
         SexBrowser_2.setObjectName("SexBrowser_2")
         SexBrowser_2.resize(652, 387)
         self.label = QtWidgets.QLabel(SexBrowser_2)
-        self.label.setGeometry(QtCore.QRect(230, 0, 181, 51))
+        self.label.setGeometry(QtCore.QRect(80, 0, 500, 60))
         self.label.setAlignment(QtCore.Qt.AlignCenter)
         self.label.setObjectName("label")
         self.label_2 = QtWidgets.QLabel(SexBrowser_2)
@@ -97,14 +110,10 @@ class UserProfilePage_customer(QtWidgets.QMainWindow):
         self.RigisterBrowser.setGeometry(QtCore.QRect(170, 280, 81, 21))
         self.RigisterBrowser.setObjectName("RigisterBrowser")
         self.ProductListButton = QtWidgets.QPushButton(SexBrowser_2)
-        self.ProductListButton.setGeometry(QtCore.QRect(350, 100, 161, 61))
+        self.ProductListButton.setGeometry(QtCore.QRect(350, 140, 161, 61))
         self.ProductListButton.setObjectName("ProductListButton")
-        self.FavoritMarketButton = QtWidgets.QPushButton(SexBrowser_2)
-        self.FavoritMarketButton.setGeometry(QtCore.QRect(350, 170, 161, 61))
-        self.FavoritMarketButton.setObjectName("FavoritMarketButton")
-        self.BuyListButton = QtWidgets.QPushButton(SexBrowser_2)
-        self.BuyListButton.setGeometry(QtCore.QRect(350, 240, 161, 61))
-        self.BuyListButton.setObjectName("BuyListButton")
+
+
 
         self.retranslateUi(SexBrowser_2)
         QtCore.QMetaObject.connectSlotsByName(SexBrowser_2)
@@ -112,16 +121,15 @@ class UserProfilePage_customer(QtWidgets.QMainWindow):
     def retranslateUi(self, SexBrowser_2):
         _translate = QtCore.QCoreApplication.translate
         SexBrowser_2.setWindowTitle(_translate("SexBrowser_2", "Dialog"))
-        self.label.setText(_translate("SexBrowser_2", "<html><head/><body><p><span style=\" font-size:36pt;\">user profile</span></p></body></html>"))
-        self.label_2.setText(_translate("SexBrowser_2", "Name"))
+        self.label.setText(_translate("SexBrowser_2", "<html><head/><body><p><span style=\" font-size:36pt;\">사용자 프로필</span></p></body></html>"))
+        self.label_2.setText(_translate("SexBrowser_2", "이름"))
         self.label_3.setText(_translate("SexBrowser_2", "ID"))
-        self.label_4.setText(_translate("SexBrowser_2", "Sex"))
-        self.label_5.setText(_translate("SexBrowser_2", "UserType"))
-        self.label_6.setText(_translate("SexBrowser_2", "BirthDay"))
-        self.label_7.setText(_translate("SexBrowser_2", "RigisterDay"))
-        self.ProductListButton.setText(_translate("SexBrowser_2", "Product List"))
-        self.FavoritMarketButton.setText(_translate("SexBrowser_2", "Favorit Market"))
-        self.BuyListButton.setText(_translate("SexBrowser_2", "Buy list"))
+        self.label_4.setText(_translate("SexBrowser_2", "성별"))
+        self.label_5.setText(_translate("SexBrowser_2", "타입"))
+        self.label_6.setText(_translate("SexBrowser_2", "생년월일"))
+        self.label_7.setText(_translate("SexBrowser_2", "등록일"))
+        self.ProductListButton.setText(_translate("SexBrowser_2", "상품 구매"))
+
 
 def StartUserProfile_customer(id_input):
     global mywindow

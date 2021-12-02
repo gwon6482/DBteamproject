@@ -94,11 +94,11 @@ class LoginWin(QtWidgets.QMainWindow):
     def retranslateUi(self, Dialog):
         _translate = QtCore.QCoreApplication.translate
         Dialog.setWindowTitle(_translate("Dialog", "Dialog"))
-        self.label.setText(_translate("Dialog", "<html><head/><body><p><span style=\" font-size:24pt;\">Login Page</span></p></body></html>"))
+        self.label.setText(_translate("Dialog", "<html><head/><body><p><span style=\" font-size:24pt;\">로그인</span></p></body></html>"))
         self.label_2.setText(_translate("Dialog", "ID"))
         self.label_3.setText(_translate("Dialog", "PW"))
-        self.LoginButton.setText(_translate("Dialog", "Login"))
-        self.RegisterButton.setText(_translate("Dialog", "Register"))
+        self.LoginButton.setText(_translate("Dialog", "로그인"))
+        self.RegisterButton.setText(_translate("Dialog", "회원가입"))
 
 
 def startLoginPage():
