@@ -86,9 +86,7 @@ class PuchaseListWin(QtWidgets.QMainWindow):
     #재고목록 refresh
     def loadPuchaseList(self):
         self.tableWidget.reset();
-        sql = "select * from product_purchase;"
-        print(sql)
-        inven_list = DBconnect.SqlCommandResult(sql)
+
 
         itemtype = {1: 'ramen', 2: 'drink',3: 'snack', 4: 'bottlewater',
                     11: 'television', 12: 'refrigerator', 13:'airconditioner', 14:'washingmachine',
@@ -97,31 +95,43 @@ class PuchaseListWin(QtWidgets.QMainWindow):
 
 
         try:
-            header_list = list(inven_list[0].keys())
-            self.tableWidget.setColumnCount(len(inven_list[0]))
-            self.tableWidget.setRowCount(len(inven_list))
-            self.tableWidget.setHorizontalHeaderLabels(header_list)
+            sql = "select register_log_id from product_register where user_id = '{}';".format(self.user_id)
+            print(sql)
+            sellerInvenList = DBconnect.SqlCommandResult(sql)
 
-            for row, item in enumerate(inven_list):
-                # print(x,item)
-                for col, key in enumerate(item.keys()):
-                    if col == 2 :
-                        print(type(item[key]))
-                        print(item[key])
-                        self.tableWidget.setItem(row, col, QTableWidgetItem("{}".format(itemtype[1])))
-                    elif col == 3:
-                        txt = "test"
-                        if(item[key] == 1):
-                            txt = "환불처리됨."
+            for i in sellerInvenList :
+                print(i['register_log_id'])
+                sql = "select date, user_id, quantity, price, product_id, refund,  from product_purchase where register_id = {};".format(i['register_log_id'])
+                print(sql)
+                inven_list = DBconnect.SqlCommandResult(sql)
+
+                header_list = list(inven_list[0].keys())
+                self.tableWidget.setColumnCount(len(inven_list[0]))
+                self.tableWidget.setRowCount(len(inven_list))
+                self.tableWidget.setHorizontalHeaderLabels(header_list)
+
+                for row, item in enumerate(inven_list):
+                    # print(x,item)
+                    for col, key in enumerate(item.keys()):
+                        if col == 4:
+                            # print(type(item[key]))
+                            # print(item[key])
+                            self.tableWidget.setItem(row, col, QTableWidgetItem("{}".format(itemtype[1])))
+                        elif col == 5:
+                            txt = "test"
+                            if (item[key] == 1):
+                                txt = "환불처리됨."
+                            else:
+                                txt = "정상처리됨."
+                            self.tableWidget.setItem(row, col, QTableWidgetItem(txt))
                         else:
-                            txt = "정상처리됨."
-                        self.tableWidget.setItem(row, col, QTableWidgetItem(txt))
-                    else:
-                        self.tableWidget.setItem(row, col, QTableWidgetItem("{}".format(item[key])))
-                #print(tmp,len(inven_list[0]))
+                            self.tableWidget.setItem(row, col, QTableWidgetItem("{}".format(item[key])))
+                    # print(tmp,len(inven_list[0]))
 
-            self.tableWidget.horizontalHeader().setSectionResizeMode(0, QtWidgets.QHeaderView.Stretch)
-            self.tableWidget.horizontalHeader().setSectionResizeMode(len(inven_list[0])-1, QtWidgets.QHeaderView.Stretch)
+                self.tableWidget.horizontalHeader().setSectionResizeMode(0, QtWidgets.QHeaderView.Stretch)
+                self.tableWidget.horizontalHeader().setSectionResizeMode(len(inven_list[0]) - 1,
+                                                                         QtWidgets.QHeaderView.Stretch)
+
         except Exception as e:
             traceback.print_exc()
 
