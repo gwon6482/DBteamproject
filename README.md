@@ -73,3 +73,10 @@ DBconnect에 팝업 메세지 출력 함수를 추가하였습니다.
 1. PuchaseListPage.py
     - 판매기록이 정상적으로 출력되지 않는 문제 해결
     - 표위에 이름이 뜨지 않는 문제 해결
+   
+# 정진우 - 21.12.2 14:06 - 커밋사항입니다.
+1. PuchaseListPage.py
+   - 판매기록이 사용자 id에 맞춰 올라오도록 수정함.
+   
+DB 변경 사항 -> product_purchase(구매사항)에 재고id(register_id)추가
+ - 판매자 추적위해 추가함.
