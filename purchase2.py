@@ -88,8 +88,8 @@ class purchase2(QtWidgets.QMainWindow):
 
             item = self.tableWidget.selectedItems()[2].text()
 
-            sql = "insert into product_purchase (user_id,product_id,refund,date,quantity,price) values('{}',{},{},'{}',{},{});".format(
-                user, item, 0, now, quantity_a, price)
+            sql = "insert into product_purchase (user_id,product_id,refund,date,quantity,price,register_id) values('{}',{},{},'{}',{},{},{});".format(
+                user, item, 0, now, quantity_a, price,register_log_id_a)
             print(sql)
             result = DBconnect.SqlCommand(sql)
             print(sql)
