@@ -1,6 +1,6 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 import LoginPage
-
+import InventoryPage
 class temp_main(QtWidgets.QMainWindow):
 
     def __init__(self):
@@ -15,7 +15,8 @@ class temp_main(QtWidgets.QMainWindow):
         
         """
     def testbuttonClicked(self):
-        pass
+        InventoryPage.startInventoryPage("test_k")
+        self.close()
 
 
     def setupUi(self, Dialog):
@@ -34,8 +35,6 @@ class temp_main(QtWidgets.QMainWindow):
 
         self.retranslateUi(Dialog)
         QtCore.QMetaObject.connectSlotsByName(Dialog)
-
-
 
 
 

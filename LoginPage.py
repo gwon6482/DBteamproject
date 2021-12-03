@@ -1,6 +1,8 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 import DBconnect
 import RegisterPage
+import UserProfile_customer
+import UserProfile_seller
 
 class LoginWin(QtWidgets.QMainWindow):
     def __init__(self):
@@ -11,8 +13,9 @@ class LoginWin(QtWidgets.QMainWindow):
         self.RegisterButton.clicked.connect(self.RegisterButtonClicked)
 
     def RegisterButtonClicked(self):
-        RegisterPage.StartRegister()
         self.close()
+        RegisterPage.StartRegister()
+
 
     def LoginCheckByDB(self):
         try:
@@ -25,6 +28,11 @@ class LoginWin(QtWidgets.QMainWindow):
                 print("login succcess")
                 DBconnect.show_popup_ok("login success","login success")
                 #여기에 해당 프로필로 이동 구현
+
+                self.GotoProfile_user(id)
+
+
+
             else:
                 print("login fail")
                 #여기에 실페 메세지 출력 함수 구현
@@ -42,7 +50,14 @@ class LoginWin(QtWidgets.QMainWindow):
             #실패 케이스 2 : 입력정보와 매칭되는 데이터 없음
 
 
-    #팝업메세지 필요하시면 이 함수 사용하시면 됩니다.
+    def GotoProfile_user(self,input_id):
+        self.close()
+        user_type = DBconnect.RequestUserData(input_id)["user_type"]
+        print(user_type)
+        if user_type == 1:
+            UserProfile_customer.StartUserProfile_customer(input_id)
+        else:
+            UserProfile_seller.StartUserProfile_customer(input_id)
 
 
 
@@ -79,11 +94,11 @@ class LoginWin(QtWidgets.QMainWindow):
     def retranslateUi(self, Dialog):
         _translate = QtCore.QCoreApplication.translate
         Dialog.setWindowTitle(_translate("Dialog", "Dialog"))
-        self.label.setText(_translate("Dialog", "<html><head/><body><p><span style=\" font-size:24pt;\">Login Page</span></p></body></html>"))
+        self.label.setText(_translate("Dialog", "<html><head/><body><p><span style=\" font-size:24pt;\">로그인</span></p></body></html>"))
         self.label_2.setText(_translate("Dialog", "ID"))
         self.label_3.setText(_translate("Dialog", "PW"))
-        self.LoginButton.setText(_translate("Dialog", "Login"))
-        self.RegisterButton.setText(_translate("Dialog", "Register"))
+        self.LoginButton.setText(_translate("Dialog", "로그인"))
+        self.RegisterButton.setText(_translate("Dialog", "회원가입"))
 
 
 def startLoginPage():
